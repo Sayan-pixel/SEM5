@@ -1,0 +1,6 @@
+*.ppk
+*credentials*.csv
+
+
+*.exe
+*.msi
