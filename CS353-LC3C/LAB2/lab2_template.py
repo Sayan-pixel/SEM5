@@ -13,7 +13,6 @@ CAT5E_ALPHA_100MHZ, LAN_BUDGET_DB = 220.0, 22.0
 CABLES = [("Cat5e", 100e6), ("Cat6", 250e6), ("Cat6a", 500e6)]
 BANDS = [900e6, 2400e6, 5000e6]
 
-# ---- Fill these in -------------------------------------------------------
 def snr_db_to_linear(snr_db):
     # TODO: convert dB to a linear ratio
     return 10 ** (snr_db / 10.0)
@@ -38,7 +37,6 @@ def ber_bpsk(ebn0_db):
     # TODO (Part D): 0.5 * erfc(sqrt(Eb/N0_linear))
     ebn0_linear = 10 ** (ebn0_db / 10.0)
     return 0.5 * math.erfc(math.sqrt(ebn0_linear))
-# --------------------------------------------------------------------------
 
 def run():
     print("Part A Bandwidth -> bit rate (SNR = %d dB)" % SNR_DB)
