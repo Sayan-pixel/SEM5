@@ -4,3 +4,6 @@
 
 *.exe
 *.msi
+
+*.myvenv
+*.venv
