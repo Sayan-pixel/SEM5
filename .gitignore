@@ -1,5 +1,6 @@
 *.ppk
-*credentials*.csv
+*credentials
+*.csv
 
 
 *.exe
