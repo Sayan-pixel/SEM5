@@ -1,4 +1,4 @@
-import sys
+
 import os
 
 def transmit(frame_bytes, corruptions):
