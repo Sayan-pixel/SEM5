@@ -1,0 +1,45 @@
+======================================================================
+CS 306: PRACTICE ASSIGNMENT 3 - RESULTS & INTERPRETATION REPORT
+======================================================================
+
+1. SUMMARY OF METRICS: QUESTION 1 (FROM-SCRATCH OLS)
+----------------------------------------------------------------------
+                   beta_0  beta_1      RSS   SS_total      R2  r_xy_train (from slope)  r_xy_test
+Train_20_Test_80  16.1411  3.5801  9364.51  152540.22  0.9386                   0.9801     0.9731
+Train_40_Test_60  20.9588  3.4894  6338.68  118235.53  0.9464                   0.9751     0.9733
+Train_60_Test_40  24.8339  3.3738  5264.35   88861.41  0.9408                   0.9764     0.9713
+Train_80_Test_20  22.7589  3.4221  2679.13   35421.03  0.9244                   0.9766     0.9615
+
+2. SUMMARY OF METRICS: QUESTION 2 (INBUILT SCIKIT-LEARN OLS)
+----------------------------------------------------------------------
+                  beta_0 (inbuilt)  beta_1 (inbuilt)  R2 (inbuilt)
+Train_20_Test_80           16.1411            3.5801        0.9386
+Train_40_Test_60           20.9588            3.4894        0.9464
+Train_60_Test_40           24.8339            3.3738        0.9408
+Train_80_Test_20           22.7589            3.4221        0.9244
+
+----------------------------------------------------------------------
+ANSWERS TO 1(h): HIGH R^2 INFERENCE & LINEAR CORRELATION JUSTIFICATION
+----------------------------------------------------------------------
+Q: What does a high R^2-value infer?
+A: The Coefficient of Determination (R^2 = 1 - RSS/SS_total) indicates the proportion
+   of total variance in sales revenue (y) explained by advertising spend (x1).
+   An R^2 > 0.93 across all test splits indicates that over 93% of the variation
+   in sales is directly accounted for by advertising expenditure.
+
+Q: Does it establish linear correlation between y and x1? Justify from 1(f) & 1(g).
+A: Yes. In simple univariate linear regression, the coefficient of determination
+   is mathematically equal to the square of Pearson's correlation coefficient:
+       R^2 = (r_xy)^2
+   From 1(g), Pearson's r_xy is derived directly from the slope:
+       r_xy = beta_1 * (s_x / s_y)
+   Since r_xy > 0.96 and beta_1 > 0 across all splits, the high R^2 mathematically
+   proves a strong, direct linear correlation between x1 and y.
+
+3. ARTIFACTS STORED:
+- CSV Data : synthetic_sales_data.csv
+- Best-fit Plots: Saved in 'e:\IIIT G\SEM_5\CS360\LAB4\plots/'
+  * plot_Train_20_Test_80.png
+  * plot_Train_40_Test_60.png
+  * plot_Train_60_Test_40.png
+  * plot_Train_80_Test_20.png
