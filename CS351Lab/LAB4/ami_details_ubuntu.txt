@@ -1,0 +1,3 @@
+AMI ID: ami-07e5ce642bbc48c0d
+AMI Name: ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20260714
+Creation Date: 2026-07-14T11:54:08.000Z
