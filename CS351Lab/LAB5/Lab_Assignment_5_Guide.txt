@@ -1,0 +1,93 @@
+# Step-wise Implementation Guide for Lab Assignment 5 - Autoscaling
+
+## General Requirements Reminder
+- **Screenshots:** Take clear, resized screenshots and upload them to Google Classroom (do not upload .zip).
+- **Naming Convention:** Name your Python files as `<assignment_no>_<question_no>.py` (e.g., `a5_q1.py`, `a5_q2.py`).
+- **Source Code Header:** Include your Name and Roll No at the top of each script.
+- **Comments & Naming:** Provide comments for each block/function and use meaningful variable/function names.
+
+---
+
+## Part 1: Website and Startup Script (10 Marks)
+
+**Step 1: Create Website Files**
+1. Create a local folder for your website files.
+2. Inside, create at least two HTML pages (e.g., `index.html` and `about.html`).
+3. Add some CSS (e.g., `style.css`) and include at least one image in your HTML.
+4. Note: Leave a placeholder in `index.html` where the Instance ID will be displayed.
+
+**Step 2: Write the Startup Script (UserData)**
+1. Create a shell script (e.g., `startup.sh`) that will serve as your EC2 UserData.
+2. In the script, write commands to:
+   - Update the package manager (e.g., `sudo apt-get update`).
+   - Install the Apache HTTP server (e.g., `sudo apt-get install -y apache2`).
+   - Start and enable the Apache service.
+   - Fetch the EC2 Instance ID using AWS instance metadata: 
+     `INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)`
+   - Inject the `$INSTANCE_ID` into your `index.html` file (you can use `sed` or `echo`).
+   - Copy or move all your website files (HTML, CSS, images) into the Apache document root directory (`/var/www/html/`).
+
+---
+
+## Part 2: Automation using boto3 (10 Marks)
+
+**Step 3: Write the Boto3 Python Script**
+1. Create a Python script named `a5_q2.py`.
+2. **Include Headers:** Add your Name and Roll Number at the top.
+3. **Initialize boto3:** Import `boto3` and create an EC2 client/resource.
+4. **Create Security Group:**
+   - Use `create_security_group` to create a new SG.
+   - Use `authorize_security_group_ingress` to allow inbound HTTP traffic on port 80 (CIDR `0.0.0.0/0`).
+5. **Launch EC2 Instance:**
+   - Read the contents of your `startup.sh` file into a string variable.
+   - Use `run_instances` to launch the EC2 instance. Provide the following parameters:
+     - `ImageId`: An Ubuntu LTS AMI ID (e.g., for ap-south-1).
+     - `InstanceType`: `t3.micro`.
+     - `SecurityGroupIds`: The ID of the Security Group you just created.
+     - `UserData`: The startup script string.
+     - `MinCount` and `MaxCount`: Both set to 1.
+6. **Retrieve and Print Information:**
+   - Wait for the instance to enter the `running` state.
+   - Print the `InstanceId` and `PublicDnsName`.
+7. **Test:** Run the script, copy the output Public DNS, and paste it into your browser to verify the website works and displays the instance ID.
+
+---
+
+## Part 3: Auto Scaling with CloudWatch (20 Marks)
+
+**Step 4: Extend the Script for ASG and CloudWatch**
+1. Create a new Python script named `a5_q3.py` (or extend the previous one based on your preference).
+2. **Create a Launch Template:**
+   - Use the `create_launch_template` method in the EC2 client.
+   - Define the template data with the same AMI, `t3.micro` instance type, Security Group ID, and the base64-encoded UserData (startup script).
+3. **Create Auto Scaling Group (ASG):**
+   - Initialize an `autoscaling` client via boto3.
+   - Use `create_auto_scaling_group` to create the ASG.
+   - Provide the Launch Template, set `MinSize=1`, `MaxSize=3`, `DesiredCapacity=1`, and specify the Availability Zones (e.g., `['ap-south-1a', 'ap-south-1b']`).
+4. **Create Scaling Policies:**
+   - Use `put_scaling_policy` to create a **Scale Out** policy (`AdjustmentType='ChangeInCapacity'`, `ScalingAdjustment=1`).
+   - Use `put_scaling_policy` to create a **Scale In** policy (`AdjustmentType='ChangeInCapacity'`, `ScalingAdjustment=-1`).
+   - Save the returned ARNs of both policies.
+5. **Create CloudWatch Alarms:**
+   - Initialize a `cloudwatch` client via boto3.
+   - **Scale Up Alarm:** Use `put_metric_alarm` for metric `CPUUtilization` on namespace `AWS/EC2`. 
+     - Condition: `>= 20%` for `120 seconds` (2 minutes).
+     - Link `AlarmActions` to the Scale Out Policy ARN.
+   - **Scale Down Alarm:** Use `put_metric_alarm` for metric `CPUUtilization`.
+     - Condition: `<= 30%` for `120 seconds` (2 minutes). *(Note: Verify this logic; usually scale down threshold is lower than scale up, but stick to the assignment's exact values).*
+     - Link `AlarmActions` to the Scale In Policy ARN.
+
+**Step 5: Test and Verify Auto-Scaling**
+1. Run `a5_q3.py` to deploy the infrastructure.
+2. **Scale Up Test:** 
+   - Apply load to the instance (e.g., SSH into it and run `stress --cpu 4 --timeout 300` or use `ab` (Apache Benchmark) locally targeting the instance URL).
+   - Watch the CloudWatch console to see the alarm trigger, and the EC2 ASG console to see a new instance launch.
+3. **Scale Down Test:**
+   - Stop the load test. Wait for the CPU to drop below the threshold for 2 minutes.
+   - Verify that the CloudWatch scale-down alarm triggers and the ASG terminates an instance.
+4. **Verification & Screenshots:** 
+   - Refresh the browser multiple times to see different Instance IDs (proving multiple instances are serving the site).
+   - Take screenshots of the CloudWatch alarms in OK/ALARM states and the multiple EC2 instances.
+
+**Step 6: Cleanup**
+- Make sure to write a teardown script or manually delete the ASG, Launch Template, Security Group, and terminate instances so you are not charged.
