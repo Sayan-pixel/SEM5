@@ -1,0 +1,58 @@
+# Step-wise Implementation Guide for Amazon Auto Scaling Group (Manual Console Method)
+
+This guide breaks down the manual steps to create an Auto Scaling Group using the AWS Management Console, as outlined in the `Amazon_AutoScaling_Group.pdf` document.
+
+---
+
+## Step 1: Navigate to Auto Scaling in AWS Console
+1. Log in to your AWS Management Console.
+2. Go to the **EC2 Dashboard**.
+3. Scroll down the left-hand navigation pane to the **Auto Scaling** section.
+4. Click on **Auto Scaling Groups**.
+
+## Step 2: Define Launch Configuration / Template
+*(Note: AWS highly recommends Launch Templates over Launch Configurations now, but the steps are similar).*
+1. If starting from the ASG creation wizard, you will be prompted to choose a Launch Template or Configuration.
+2. To create a new one, specify:
+   - **AMI (Amazon Machine Image):** Select an OS (e.g., Amazon Linux 2 or Ubuntu).
+   - **Instance Type:** Choose your instance size (e.g., `t2.micro` or `t3.micro`).
+   - **Security Groups:** Select an existing Security Group or create a new one that allows necessary traffic (like HTTP on port 80 and SSH on port 22).
+   - **Key Pair:** Select an existing key pair to allow SSH access.
+3. Save the Launch Configuration / Template.
+
+## Step 3: Create the Auto Scaling Group
+1. Back on the ASG wizard, select the Launch Configuration/Template you just created.
+2. **Network Settings:** Choose your VPC and select one or multiple Subnets/Availability Zones to deploy your instances across.
+3. **Group Size (Capacity):** 
+   - **Desired capacity:** Set to your baseline number of instances (e.g., 1).
+   - **Minimum capacity:** Set the lower bound (e.g., 1).
+   - **Maximum capacity:** Set the upper bound (e.g., 3).
+
+## Step 4: Configure Scaling Policies & CloudWatch Alarms
+1. On the "Configure advanced options" or "Scaling Policies" step of the wizard, choose to configure a scaling policy.
+2. **Scale Up Policy & Alarm:**
+   - Create a Step scaling or Simple scaling policy named "Scale Up".
+   - Under the policy, choose to **Create a CloudWatch Alarm**.
+   - Set the alarm metric to `CPU Utilization` > [Threshold %] for [X minutes].
+   - Tell the policy to **Add** instance(s) when this alarm is triggered.
+3. **Scale Down Policy & Alarm:**
+   - Create another policy named "Scale Down".
+   - Create a second CloudWatch Alarm.
+   - Set the alarm metric to `CPU Utilization` < [Threshold %] for [X minutes].
+   - Tell the policy to **Remove** instance(s) when this alarm is triggered.
+4. Complete the wizard and click **Create Auto Scaling Group**.
+
+## Step 5: Verification and Screenshots
+1. Once created, go to the **Instances** tab within your Auto Scaling Group to see the instances booting up.
+2. Take the necessary **screenshots** showing:
+   - The Auto Scaling Group Details.
+   - The CloudWatch Alarms you created.
+   - The instances running under the ASG.
+
+## Step 6: Cleanup (Crucial to avoid AWS charges)
+1. In the EC2 Dashboard, go to **Auto Scaling Groups**.
+2. Select the ASG you created and click **Delete**. (This will also terminate the EC2 instances running inside it).
+3. Wait for the ASG to be fully deleted.
+4. Go to **Launch configurations** or **Launch Templates** in the left pane.
+5. Select the configuration you made and click **Delete**.
+6. (Optional) Go to CloudWatch and delete the Alarms created for scaling.
