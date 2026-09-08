@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayan Shit | Journey</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- WebGL Background Container -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <nav>
+        <div class="logo magnetic"><a href="index.html" style="color:white; text-decoration:none;">SAYAN.</a></div>
+        <div class="nav-links">
+            <a href="index.html" class="magnetic">Home</a>
+            <a href="about.html" class="magnetic">Journey</a>
+            <a href="index.html#projects" class="magnetic">Work</a>
+            <a href="index.html#contact" class="magnetic">Contact</a>
+        </div>
+    </nav>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <div style="height: 15vh;"></div> <!-- Spacer for nav -->
+
+            <!-- About / Timeline -->
+            <section id="about" class="about">
+                <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+                    <img src="https://github.com/Sayan-pixel.png" alt="Sayan Shit" style="width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 0 25px var(--accent-glow);">
+                </div>
+                <h2 class="section-title text-center">Journey</h2>
+                <div class="timeline">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-item gsap-fade-up">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>B.Tech Computer Science</h3>
+                            <p class="timeline-meta">IIIT Guwahati | 2024 - 2028</p>
+                            <p>Currently in 5th Semester. Mastering Data Structures, Algorithms, OOP, and cutting-edge Cloud tech.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item gsap-fade-up">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>Event Manager</h3>
+                            <p class="timeline-meta">Innovation & Entrepreneurship Cell | 2024 - Present</p>
+                            <p>Orchestrating major events, notably the INIZIO 2026 Panel Discussion featuring industry leaders.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills -->
+            <section id="skills" class="skills-section">
+                <h2 class="section-title text-center">Arsenal</h2>
+                <div class="skills-grid">
+                    <div class="skill-card gsap-fade-up magnetic">
+                        <i class="fa-brands fa-java skill-icon"></i>
+                        <h4>Java / C++ / Python</h4>
+                        <p>Core programming & OOP</p>
+                    </div>
+                    <div class="skill-card gsap-fade-up magnetic">
+                        <i class="fa-solid fa-network-wired skill-icon"></i>
+                        <h4>Data Structures</h4>
+                        <p>Algorithmic problem solving</p>
+                    </div>
+                    <div class="skill-card gsap-fade-up magnetic">
+                        <i class="fa-solid fa-database skill-icon"></i>
+                        <h4>DBMS / SQL</h4>
+                        <p>Relational schema design</p>
+                    </div>
+                    <div class="skill-card gsap-fade-up magnetic">
+                        <i class="fa-solid fa-brain skill-icon"></i>
+                        <h4>AI / ML</h4>
+                        <p>Reinforcement learning</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="modern-footer" style="height: 50vh;">
+                <div class="social-links">
+                    <a href="https://github.com/Sayan-pixel" target="_blank" class="magnetic"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="https://www.linkedin.com/in/sayan-shit-iiitg" target="_blank" class="magnetic"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                    <a href="mailto:sayan.shit24b@iiitg.ac.in" class="magnetic"><i class="fa-solid fa-envelope"></i> Email</a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Sayan Shit. Built with GSAP & Three.js</p>
+                    <p>CS351 Lab 5</p>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
