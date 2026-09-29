@@ -1,0 +1,6 @@
+.env
+*.pem
+upload_helper.py
+get_url.py
+lab6.zip
+__pycache__/
