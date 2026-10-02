@@ -1,0 +1,50 @@
+K-Means Clustering Analysis
+===========================
+
+--- K = 3 ---
+Cluster 0: 504 points
+Cluster 1: 347 points
+Cluster 2: 292 points
+
+--- K = 5 ---
+Cluster 0: 194 points
+Cluster 1: 399 points
+Cluster 2: 231 points
+Cluster 3: 126 points
+Cluster 4: 193 points
+
+--- K = 10 ---
+Cluster 0: 100 points
+Cluster 1: 106 points
+Cluster 2: 310 points
+Cluster 3: 32 points
+Cluster 4: 161 points
+Cluster 5: 95 points
+Cluster 6: 22 points
+Cluster 7: 19 points
+Cluster 8: 140 points
+Cluster 9: 158 points
+
+--- K = 15 ---
+Cluster 0: 17 points
+Cluster 1: 96 points
+Cluster 2: 12 points
+Cluster 3: 49 points
+Cluster 4: 120 points
+Cluster 5: 79 points
+Cluster 6: 73 points
+Cluster 7: 43 points
+Cluster 8: 100 points
+Cluster 9: 117 points
+Cluster 10: 148 points
+Cluster 11: 106 points
+Cluster 12: 30 points
+Cluster 13: 125 points
+Cluster 14: 28 points
+
+Result Analysis:
+The K-Means algorithm was applied to the 11 constituents of the WineQT dataset.
+As the number of initial centroids (K) increases from 3 to 15, the clusters become smaller and more fragmented.
+PCA was used strictly to project the 11-dimensional clusters down to 2 dimensions for visual inspection.
+In the visualizations, lower values of K (like K=3 or K=5) show broad, distinct groupings that might correspond to general wine types or major quality categories.
+Higher values (like K=10 or K=15) show heavy overlap in the 2D projected space, suggesting that they are finding very nuanced local structures or potentially over-segmenting the dataset.
