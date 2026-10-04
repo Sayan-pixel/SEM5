@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=30&pause=1000&color=38B2AC&center=true&vCenter=true&width=600&lines=🎓+Welcome+to+SEM+5;IIITG+Academic+Repository;Cloud+Computing+%7C+Machine+Learning;Computer+Networks+%7C+Biology" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=26&pause=1000&color=38B2AC&center=true&vCenter=true&width=700&height=70&lines=🎓+Welcome+to+SEM+5;IIITG+Academic+Repository;Cloud+Computing+%7C+Machine+Learning;Computer+Networks+%7C+Biology" alt="Typing SVG" />
   </a>
   <p><i>A comprehensive collection of coursework, lab assignments, and study materials for Semester 5.</i></p>
 </div>
