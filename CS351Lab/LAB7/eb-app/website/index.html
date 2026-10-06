@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayan Shit | Creative Developer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- WebGL Background Container -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo magnetic">
+            <a href="index.html">SAYAN.</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="magnetic nav-link">Home</a>
+            <a href="about.html" class="magnetic nav-link">Journey</a>
+            <a href="#projects" class="magnetic nav-link">Work</a>
+            <a href="#feedback" class="magnetic nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <!-- Hero Section -->
+            <section id="hero" class="hero">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title" data-text="SAYAN SHIT">SAYAN<br>SHIT</h1>
+                        <div class="hero-subtitle">
+                            <span>Creative Developer</span>
+                            <span class="dot"></span>
+                            <span>AI Enthusiast</span>
+                        </div>
+                        <p class="hero-desc">B.Tech CSE 2028 @ IIIT Guwahati. Crafting immersive digital experiences and scalable architectures through code.</p>
+                    </div>
+                    <div class="hero-image gsap-fade-up">
+                        <div class="profile-frame">
+                            <div class="profile-glow"></div>
+                            <img src="dp.jpg" alt="Sayan Shit" class="profile-photo">
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-indicator">
+                    <div class="mouse"></div>
+                    <span>Scroll</span>
+                </div>
+            </section>
+
+            <!-- Projects (Horizontal Scroll) -->
+            <section id="projects" class="projects-container">
+                <div class="projects-wrapper">
+                    
+                    <!-- Panel 1 -->
+                    <div class="project-panel">
+                        <div class="project-info">
+                            <div class="project-badge">
+                                <span class="badge-dot"></span>
+                                <span class="badge-text">Selected Work · 01 / 03</span>
+                            </div>
+                            <span class="project-num">01</span>
+                            <h3 class="project-title">Lunar Lander AI</h3>
+                            <p class="project-desc">An AI agent trained using Reinforcement Learning to safely land a spacecraft in a simulated environment.</p>
+                            <div class="tags">
+                                <span>Python</span>
+                                <span>AI</span>
+                                <span>Gym</span>
+                            </div>
+                        </div>
+                        <div class="project-visual pv-1">
+                            <img src="lunar_lander.gif" alt="Lunar Lander AI Simulation" class="project-media">
+                        </div>
+                    </div>
+
+                    <!-- Panel 2 -->
+                    <div class="project-panel">
+                        <div class="project-info">
+                            <div class="project-badge">
+                                <span class="badge-dot"></span>
+                                <span class="badge-text">Selected Work · 02 / 03</span>
+                            </div>
+                            <span class="project-num">02</span>
+                            <h3 class="project-title">Real Estate DBMS</h3>
+                            <p class="project-desc">Robust database management system designed to track property listings, customer profiles, and real estate transactions.</p>
+                            <div class="tags">
+                                <span>SQL</span>
+                                <span>DBMS</span>
+                                <span>Schema</span>
+                            </div>
+                        </div>
+                        <div class="project-visual pv-2">
+                            <img src="OIP.webp" alt="Real Estate DBMS" class="project-media">
+                        </div>
+                    </div>
+
+                    <!-- Panel 3 -->
+                    <div class="project-panel">
+                        <div class="project-info">
+                            <div class="project-badge">
+                                <span class="badge-dot"></span>
+                                <span class="badge-text">Selected Work · 03 / 03</span>
+                            </div>
+                            <span class="project-num">03</span>
+                            <h3 class="project-title">INIZIO 2026 Panel</h3>
+                            <p class="project-desc">Spearheaded logistics and operations for the massive Innovation & Entrepreneurship summit at IIIT Guwahati.</p>
+                            <div class="tags">
+                                <span>Leadership</span>
+                                <span>Management</span>
+                            </div>
+                        </div>
+                        <div class="project-visual pv-3">
+                            <img src="panel.jpg" alt="INIZIO 2026 Panel" class="project-media">
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Feedback Section -->
+            <section id="feedback" class="feedback-section">
+                <h2 class="section-title">Leave a Message</h2>
+                <div class="feedback-container">
+                    
+                    <div class="feedback-form-wrapper">
+                        <h3 class="feedback-heading">Say Hello</h3>
+                        <form id="feedback-form" class="feedback-form">
+                            <input type="text" id="fb-name" placeholder="Your Name" required class="feedback-input">
+                            <textarea id="fb-message" placeholder="Your Message" rows="5" required class="feedback-input feedback-textarea"></textarea>
+                            <button type="submit" class="feedback-btn">Send Message</button>
+                        </form>
+                        <p id="fb-status" class="feedback-status"></p>
+                    </div>
+
+                    <div class="feedback-list-wrapper">
+                        <h3 class="feedback-heading">Recent Messages</h3>
+                        <div id="feedback-list" class="feedback-list">
+                            <p class="feedback-empty">Loading messages...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer id="contact" class="modern-footer">
+                <h2 class="footer-cta">Let's build<br><span class="outline-text">the future.</span></h2>
+                <div class="social-links">
+                    <a href="https://github.com/Sayan-pixel" target="_blank" class="magnetic social-btn"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="https://www.linkedin.com/in/sayan-shit-iiitg" target="_blank" class="magnetic social-btn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                    <a href="mailto:sayan.shit24b@iiitg.ac.in" class="magnetic social-btn"><i class="fa-solid fa-envelope"></i> Email</a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Sayan Shit.</p>
+                    <!-- <p>CS351 Lab 5 · AWS Instance: <span id="instance-id" class="instance-tag">Fetching...</span></p> -->
+                     <p>CS351 Lab 6</p>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
