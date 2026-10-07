@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": [
+        "CS351Lab/LAB8"
+    ],
+    "java.project.referencedLibraries": [
+        "CS351Lab/LAB8/lib/*.jar",
+        "e:/IIIT G/SEM_5/CS351Lab/LAB8/lib/*.jar",
+        "e:\\IIIT G\\SEM_5\\CS351Lab\\LAB8\\lib\\*.jar"
+    ]
+}
