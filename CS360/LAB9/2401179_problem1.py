@@ -122,7 +122,9 @@ def k_fold_cv(X, y, k=5, alpha=0.01, rho=0.001, normalize=False):
     return metrics, cms
 
 # Plot Confusion Matrix
-def plot_confusion_matrix(cm, title, filename):
+def plot_confusion_matrix(cm, title, filename, output_dir="plots"):
+    os.makedirs(output_dir, exist_ok=True)
+    filepath = os.path.join(output_dir, os.path.basename(filename))
     plt.figure(figsize=(6, 4))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
                 xticklabels=['Non-Fraud (0)', 'Fraud (1)'], 
@@ -131,10 +133,10 @@ def plot_confusion_matrix(cm, title, filename):
     plt.ylabel('Actual Label')
     plt.xlabel('Predicted Label')
     plt.tight_layout()
-    plt.savefig(filename)
+    plt.savefig(filepath)
     plt.close()
 
-def print_results(metrics, cms, title, filename):
+def print_results(metrics, cms, title, filename, output_dir="plots"):
     print(f"\n{'='*60}\n{title}\n{'='*60}")
     cols = ['Overall Acc', 'Acc(Non-Fraud)', 'Acc(Fraud)', 'Precision', 'Recall']
     df_metrics = pd.DataFrame(metrics, columns=cols)
@@ -148,8 +150,9 @@ def print_results(metrics, cms, title, filename):
     print(f"\n--- Combined Confusion Matrix ---")
     print(total_cm)
     
-    plot_confusion_matrix(total_cm, title, filename)
-    print(f"Saved confusion matrix plot as: {filename}")
+    plot_confusion_matrix(total_cm, title, filename, output_dir=output_dir)
+    filepath = os.path.join(output_dir, os.path.basename(filename))
+    print(f"Saved confusion matrix plot as: {filepath}")
 
 
 if __name__ == "__main__":
