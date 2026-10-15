@@ -1,0 +1,3 @@
+Hello Docker
+Hello Hadoop MapReduce
+Welcome to Hadoop Custom MapReduce Java Program
