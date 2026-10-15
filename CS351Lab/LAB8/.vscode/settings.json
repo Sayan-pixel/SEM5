@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": [
+        "Java_MapReduce"
+    ],
+    "java.project.referencedLibraries": [
+        "Java_MapReduce/lib/*.jar"
+    ]
+}
