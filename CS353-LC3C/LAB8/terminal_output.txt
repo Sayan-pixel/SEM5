@@ -1,0 +1,94 @@
+﻿=================================================================
+PART A: NETWORK TOPOLOGY (ADJACENCY STRUCTURE)
+=================================================================
+Router A -> B (cost: 2), C (cost: 5)
+Router B -> A (cost: 2), C (cost: 1), D (cost: 4)
+Router C -> A (cost: 5), B (cost: 1), E (cost: 3)
+Router D -> B (cost: 4), E (cost: 1), F (cost: 2)
+Router E -> C (cost: 3), D (cost: 1), F (cost: 6)
+Router F -> D (cost: 2), E (cost: 6)
+
+=================================================================
+TEST VECTOR 1: SINK = F (BASE TOPOLOGY)
+=================================================================
+Cost to F: A = 8, B = 6, C = 6, D = 2, E = 3, F = 0
+Next hop toward F: A to B, B to D, C to E, D to F, E to D
+Sink-tree edges (node, parent): (A, B), (B, D), (C, E), (D, F), (E, D)
+
+Forwarding Table for Destination (Sink) = F:
++--------+----------+-------+
+| Router | Next Hop |  Cost |
++--------+----------+-------+
+|   A    |   B      |  8    |
+|   B    |   D      |  6    |
+|   C    |   E      |  6    |
+|   D    |   F      |  2    |
+|   E    |   D      |  3    |
+|   F    |   (local) |  0    |
++--------+----------+-------+
+>>> Vector 1 Result: PASS (Matches specification exactly)
+
+=================================================================
+TEST VECTOR 2: SINK = A (BASE TOPOLOGY)
+=================================================================
+Cost to A: A = 0, B = 2, C = 3, D = 6, E = 6, F = 8
+Next hop toward A: B to A, C to B, D to B, E to C, F to D
+Sink-tree edges (node, parent): (B, A), (C, B), (D, B), (E, C), (F, D)
+
+Forwarding Table for Destination (Sink) = A:
++--------+----------+-------+
+| Router | Next Hop |  Cost |
++--------+----------+-------+
+|   A    |   (local) |  0    |
+|   B    |   A      |  2    |
+|   C    |   B      |  3    |
+|   D    |   B      |  6    |
+|   E    |   C      |  6    |
+|   F    |   D      |  8    |
++--------+----------+-------+
+>>> Vector 2 Result: PASS (Matches specification exactly)
+
+=================================================================
+PART D: PROPERTIES AND REROUTING EXPERIMENT
+=================================================================
+--- Task 1: Spanning Tree Property Verification (Sink = F) ---
+Total Routers (N)               : 6
+Sink-Tree Edge Count            : 5
+Has exactly N - 1 edges?        : True (5 == 6 - 1)
+Reaches every router to sink?   : True
+Contains no cycles (acyclic)?   : True
+Is a valid Spanning Tree?       : True
+
+--- Task 2: Modified Topology Rerouting Experiment (Vector 3) ---
+Modified Topology: Link D-F cost raised from 2 to 9.
+Cost to F: A = 12, B = 10, C = 9, D = 7, E = 6, F = 0
+Next hop toward F: A to B, B to C, C to E, D to E, E to F
+Sink-tree edges (node, parent): (A, B), (B, C), (C, E), (D, E), (E, F)
+
+Forwarding Table for Destination (Sink) = F:
++--------+----------+-------+
+| Router | Next Hop |  Cost |
++--------+----------+-------+
+|   A    |   B      |  12   |
+|   B    |   C      |  10   |
+|   C    |   E      |  9    |
+|   D    |   E      |  7    |
+|   E    |   F      |  6    |
+|   F    |   (local) |  0    |
++--------+----------+-------+
+>>> Vector 3 Result: PASS (Matches specification exactly)
+
+Sink Tree Edge Changes (Vector 1 -> Vector 3):
+  Removed Edges   : (B, D), (D, F), (E, D)
+  Added Edges     : (B, C), (D, E), (E, F)
+  Unchanged Edges : (A, B), (C, E)
+
+Vector 3 Spanning Tree Check Valid? : True
+
+--- Task 2 & Task 3: Written Explanations ---
+Explanation for Part D.2 (Optimality Principle & Rerouting):
+Under the original topology, the least-cost path from D to F was direct (D-F, cost 2), and router E reached F via D (E->D->F, cost 1+2=3 < 6). When the cost of link D-F increases from 2 to 9, the direct link E-F (cost 6) becomes cheaper than going through D (1+9=10). Router D now finds a cheaper route to F through E (D->E->F, cost 1+6=7) rather than its direct link of cost 9. By the Optimality Principle, if router E lies on the optimal path from D (or C, B, A) to F, then the remaining portion of that path must be the optimal path from E to F (which is now E->F). Consequently, traffic that previously converged on D to reach F now pivots to route through E, replacing tree edges (B, D), (D, F), and (E, D) with (B, C), (D, E), and (E, F).
+
+Explanation for Part D.3 (Undirected Equivalence & Asymmetric Counterexample):
+On an undirected graph, all link costs are symmetric, meaning cost(u, v) = cost(v, u). Because path costs are symmetric sums, the least-cost path from any node X to destination D is simply the exact reverse of the least-cost path from D to X; thus, Dijkstra run once from D discovers the reverse shortest paths from all sources, making Dijkstra's predecessors identical to each node's next hop toward D. The two would differ in directed networks with asymmetric link costs (such as asymmetric bandwidth/propagation or policy routing where cost(u->v) != cost(v->u)), where the forward shortest path from D to X does not correspond to the reverse path from X to D.
+=================================================================
