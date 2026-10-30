@@ -1,0 +1,17 @@
+1. TTL and Checksum: The Time to Live (TTL) field changes at every router. 
+Because the header checksum is a mathematical sum over the entire IPv4 header, 
+altering the TTL field invalidates the original sum. Therefore, the router must recompute 
+the checksum at every hop before forwarding the packet. In the corrupted packet from Part B, 
+the TTL was altered from 0x40 to 0x3F, but the checksum was left unchanged, causing the 
+computed checksum (0xDC10) to mismatch the stored checksum (0xDB10).
+
+2. Fragment Offset Multiples: The fragment offset field is strictly measured in units of 8 
+bytes. Because receivers reconstruct the payload by multiplying this offset by 8, every 
+fragment except the final one must carry a payload whose length is a multiple of 8 bytes to 
+ensure the subsequent fragment aligns cleanly on an 8-byte boundary.
+
+3. Checksum Coverage: The IPv4 checksum covers only the header, leaving the payload out of 
+the calculation. This design optimizes processing speeds at intermediate routers, as 
+computing a checksum over large payloads at every network hop would introduce severe latency. 
+The payload is instead protected by the checksums of higher-layer protocols (like TCP or UDP), 
+which are evaluated only by the destination hosts.
