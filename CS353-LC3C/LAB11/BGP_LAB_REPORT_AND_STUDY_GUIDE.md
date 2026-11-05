@@ -93,7 +93,7 @@ An **Autonomous System (AS)** is a collection of connected Internet Protocol (IP
 In intra-domain routing (e.g., OSPF), Dijkstra’s shortest-path algorithm requires:
 1. **Global Link-State Database (LSDB):** Every router must possess full knowledge of every router, link, and cost in the entire network.
 2. **Global Trust & Uniform Metrics:** All routers must agree on what "cost" means and trust each other not to inject malicious topology data.
-3. **Additive Metric Optimization:** Dijkstra finds the tree that minimizes $\sum \text{link\_cost}$.
+3. **Additive Metric Optimization:** Dijkstra finds the tree that minimizes $\sum \text{link cost}$.
 
 **Why this fails across the Internet:**
 - **Scale:** The global routing table exceeds 950,000 IPv4 prefixes. Running Dijkstra over millions of external routers and links across the globe would exhaust memory and CPU resources.
@@ -246,9 +246,9 @@ The function `best_route(as, advertised_routes, localpref)` executes the local r
 1. **Candidate Construction:** For each neighbor $N$ advertising an AS-path $P$, the candidate AS-path is formed by prepending $N$:
    $$\text{Candidate Path} = [N] + P, \quad \text{Next-Hop} = N$$
 2. **Loop Check:**
-   $$\text{If } \text{deciding\_as} \in \text{Candidate Path} \implies \text{Reject}$$
+   $$\text{If } \text{deciding AS} \in \text{Candidate Path} \implies \text{Reject}$$
 3. **Decision Tuple Comparison:** For each accepted route, a key is constructed:
-   $$\text{Key} = (-\text{local\_pref}, \text{len}(\text{Candidate Path}), \text{next\_hop})$$
+   $$\text{Key} = (-\text{local-pref}, \text{len}(\text{Candidate Path}), \text{next-hop})$$
    The candidate minimizing this key wins.
 
 **Test Case on AS6 (Scenario 1 tie-break):**
