@@ -1,0 +1,177 @@
+﻿==============================================================================
+CS353 NETWORK QoS LAB: COMPLETE SIMULATION & VERIFICATION
+==============================================================================
+
+##############################################################################
+PART A: ADMISSION CONTROL (Parekh-Gallagher Model)
+##############################################################################
+Link Capacity C = 10.0 Mbps
+Incoming Setup Requests:
+  Flow   | Weight   | Requested Rate (Mbps) 
+  ------------------------------------------
+  f1     | 1.0      | 2.00                  
+  f2     | 1.0      | 2.00                  
+  f3     | 2.0      | 4.00                  
+  f4     | 1.0      | 3.00                  
+
+Sequential Admission Decisions:
+  Flow   | Req Rate   | Total W  | Guaranteed   | Decision   | Reason
+  --------------------------------------------------------------------------
+  f1     | 2.0        | 1.0      | 10.00        | ADMITTED   | Guaranteed rate 10.00 Mbps >= requested 2.00 Mbps; all previous guarantees intact.
+  f2     | 2.0        | 2.0      | 5.00         | ADMITTED   | Guaranteed rate 5.00 Mbps >= requested 2.00 Mbps; all previous guarantees intact.
+  f3     | 4.0        | 4.0      | 5.00         | ADMITTED   | Guaranteed rate 5.00 Mbps >= requested 4.00 Mbps; all previous guarantees intact.
+  f4     | 3.0        | 5.0      | 2.00         | REJECTED   | Guaranteed rate 2.00 Mbps < requested 3.00 Mbps (or breaks existing flow guarantee).
+
+[CONFIRMED] f1, f2, and f3 are ADMITTED; f4 is REJECTED (guaranteed only 2.0 Mbps against 3.0 Mbps requested).
+
+--- Part A Written Answers ---
+Question 4a: Which flow's guarantee does the rejection protect?
+Answer:
+  1. Primary: Rejection directly protects f4's OWN contract guarantee, because the network
+     cannot fulfill f4's requested service level (3 Mbps) under the committed fair-share rate (2 Mbps).
+  2. Existing flows: If f4 were forcefully granted 3 Mbps (requiring weight W >= 12/7 ≈ 1.714),
+     the total requested bandwidth (2 + 2 + 4 + 3 = 11 Mbps) would exceed the physical link capacity
+     (10 Mbps). This would degrade the guaranteed rates of previously admitted flows f1, f2, and f3
+     below their contractual commitments (e.g., at W_4 = 2, f1 and f2 get only 1.67 Mbps < 2 Mbps,
+     and f3 gets only 3.33 Mbps < 4 Mbps). Hence, rejection protects flows f1, f2, and f3.
+Question 4b: What weight or rate would f4 need to be admitted?
+Answer:
+  - Rate requirement: With its given weight W_4 = 1, total weight is ΣW = 4 + 1 = 5.
+    f4 is guaranteed (1/5) * 10 = 2.0 Mbps. Therefore, f4 would be admitted if its requested rate
+    is reduced to R_4 <= 2.0 Mbps.
+  - Weight note: No weight alone can admit f4 at R_4 = 3.0 Mbps because the sum of requested rates
+    (2 + 2 + 4 + 3 = 11 Mbps) strictly exceeds link capacity C = 10 Mbps. The link has only
+    10 - (2 + 2 + 4) = 2.0 Mbps of unallocated capacity.
+
+##############################################################################
+PART B: TRAFFIC POLICING (Token Bucket - Drop Excess)
+##############################################################################
+Token Bucket Parameters: fill rate r = 1.0 token/unit, capacity b = 4.0 tokens (starts full).
+Packet Size L = 1 token. Packet Arrival Trace: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 6.0]
+
+Policing Execution Trace:
+  Pkt #  | Arrival  | Tokens Before   | Action   | Tokens After   
+  ------------------------------------------------------------
+  1      | 0.0      | 4.00            | PASS     | 3.00           
+  2      | 0.0      | 3.00            | PASS     | 2.00           
+  3      | 0.0      | 2.00            | PASS     | 1.00           
+  4      | 0.0      | 1.00            | PASS     | 0.00           
+  5      | 0.0      | 0.00            | DROP     | 0.00           
+  6      | 0.0      | 0.00            | DROP     | 0.00           
+  7      | 5.0      | 4.00            | PASS     | 3.00           
+  8      | 6.0      | 4.00            | PASS     | 3.00           
+
+[CONFIRMED] 6 packets passed, 2 packets dropped.
+Packets 1-4 pass, Packets 5-6 drop, Packets 7-8 (at times 5 and 6) pass.
+
+--- Part B Written Answer ---
+Question 3: Explain why exactly two packets are dropped, in terms of bucket capacity.
+Answer:
+  The bucket capacity is b = 4 tokens, and it starts full. At time t = 0, a burst of 6 packets
+  arrives simultaneously (Δt = 0), meaning zero new tokens accrue during the burst.
+  Each packet consumes L = 1 token. The first 4 packets consume all 4 tokens in the bucket,
+  leaving 0 tokens. When packets 5 and 6 arrive at t = 0, there are 0 tokens available (< 1 token needed).
+  Because policing does not store or buffer non-conforming packets, the router immediately drops
+  the remaining 6 - 4 = 2 packets.
+
+##############################################################################
+PART C: TRAFFIC SHAPING (Token Bucket - Buffer Excess)
+##############################################################################
+
+Shaping Execution Trace:
+  Pkt #  | Arrival  | Release Time   | Delay    | Status
+  ----------------------------------------------------
+  1      | 0.0      | 0.0            | 0.0      | DELIVERED (Buffered)
+  2      | 0.0      | 0.0            | 0.0      | DELIVERED (Buffered)
+  3      | 0.0      | 0.0            | 0.0      | DELIVERED (Buffered)
+  4      | 0.0      | 0.0            | 0.0      | DELIVERED (Buffered)
+  5      | 0.0      | 1.0            | 1.0      | DELIVERED (Buffered)
+  6      | 0.0      | 2.0            | 2.0      | DELIVERED (Buffered)
+  7      | 5.0      | 5.0            | 0.0      | DELIVERED (Buffered)
+  8      | 6.0      | 6.0            | 0.0      | DELIVERED (Buffered)
+
+[CONFIRMED] Packets 1-4 leave at t = 0, packet 5 leaves at t = 1, packet 6 leaves at t = 2;
+packets 7 and 8 leave immediately at t = 5 and t = 6. Zero packets dropped.
+
+--- Part C Written Answer ---
+Question 3a: Report the delay each packet experienced, and compare with Part B.
+Delays experienced in Shaping:
+  Packet 1 (arr=0): Delay = 0.0 time units (released at t=0.0)
+  Packet 2 (arr=0): Delay = 0.0 time units (released at t=0.0)
+  Packet 3 (arr=0): Delay = 0.0 time units (released at t=0.0)
+  Packet 4 (arr=0): Delay = 0.0 time units (released at t=0.0)
+  Packet 5 (arr=0): Delay = 1.0 time units (released at t=1.0)
+  Packet 6 (arr=0): Delay = 2.0 time units (released at t=2.0)
+  Packet 7 (arr=5): Delay = 0.0 time units (released at t=5.0)
+  Packet 8 (arr=6): Delay = 0.0 time units (released at t=6.0)
+Comparison with Part B:
+  In Part B (Policing), packets 5 and 6 were DROPPED (100% loss, infinite delay / never delivered).
+  In Part C (Shaping), NO packets were dropped (0% loss); instead, packets 5 and 6 experienced small
+  delays of 1.0 and 2.0 time units respectively to conform to the token arrival rate.
+
+Question 3b: State the single difference between shaping and policing that produces drops in one and delays in the other.
+Answer:
+  The single fundamental difference is the presence of a PACKET BUFFER (QUEUE).
+  - A policer has NO buffer: non-conforming packets are immediately dropped (or marked) upon arrival.
+  - A shaper has a BUFFER: non-conforming packets are held in a queue and delayed until sufficient tokens
+    accrue, trading buffer latency for zero packet loss.
+
+##############################################################################
+PART D: PACKET SCHEDULING (Weighted Fair Queuing vs. FIFO)
+##############################################################################
+Admitted Flows and Packets (carried over from Part A):
+  Flow 1 (weight = 1): A(arr=0, len=8), F(arr=10, len=6)
+  Flow 2 (weight = 1): B(arr=5, len=6), D(arr=8, len=9), H(arr=20, len=8)
+  Flow 3 (weight = 2): C(arr=5, len=10), E(arr=8, len=8), G(arr=11, len=10)
+
+WFQ Finish Number Computations (F = max(arrival, prev_finish) + length / weight):
+  Pkt   | Flow     | Weight   | Arrival  | Length   | Finish Number F
+  --------------------------------------------------------
+  A     | Flow 1   | 1        | 0        | 8        | 8.0       
+  C     | Flow 3   | 2        | 5        | 10       | 10.0      
+  B     | Flow 2   | 1        | 5        | 6        | 11.0      
+  E     | Flow 3   | 2        | 8        | 8        | 14.0      
+  F     | Flow 1   | 1        | 10       | 6        | 16.0      
+  G     | Flow 3   | 2        | 11       | 10       | 19.0      
+  D     | Flow 2   | 1        | 8        | 9        | 20.0      
+  H     | Flow 2   | 1        | 20       | 8        | 28.0      
+
+[CONFIRMED] Finish numbers: A 8, C 10, B 11, E 14, F 16, G 19, D 20, H 28
+[CONFIRMED] WFQ Output Order:  A -> C -> B -> E -> F -> G -> D -> H
+[CONFIRMED] FIFO Arrival Order: A -> B -> C -> D -> E -> F -> G -> H
+
+--- Part D Written Answers ---
+Question 4a: Compare the two orders and explain how the weight-2 flow is served.
+Comparison:
+  - WFQ Order:  A, C, B, E, F, G, D, H
+  - FIFO Order: A, B, C, D, E, F, G, H
+Explanation of how Flow 3 (weight = 2) is served:
+  - In WFQ, a flow's finish number increments by length / weight.
+    Because Flow 3 has weight 2 (twice that of Flow 1 and Flow 2), its virtual transmission time
+    per byte is cut in half (10/2 = 5 for C, 8/2 = 4 for E, 10/2 = 5 for G).
+  - Consequently, even though Packet C (length 10) arrives at time 5 alongside Packet B (length 6),
+    Packet C's finish number is 5 + 10/2 = 10, whereas Packet B's finish number is 5 + 6/1 = 11.
+    Therefore, Packet C is scheduled BEFORE Packet B!
+  - Similarly, Packet E (arrival 8, length 8) finishes at 10 + 8/2 = 14, jumping ahead of Flow 1's
+    Packet F (finish 16) and Flow 2's Packet D (arrival 8, length 9, finish 20).
+  - Under FIFO, Flow 3 would be stuck behind earlier arrivals or equal-arrival ties regardless of weight.
+    WFQ ensures Flow 3 receives exactly twice the bandwidth share of the link compared to Flows 1 and 2.
+
+Question 4b: How does Weighted Fair Queuing protect a flow from being starved by another?
+Answer:
+  - In FIFO, an aggressive or misbehaving flow that floods packets can monopolize the queue and link,
+    causing severe delay or complete starvation for all other flows.
+  - In WFQ, each flow maintains its own virtual queue state. A packet's finish number depends on the
+    PREVIOUS finish number of that same flow (max(arrival, prev_finish) + length / weight).
+  - If an aggressive flow transmits a massive burst of packets, its finish numbers advance far into
+    the future (e.g., F1, F2 = F1 + L/w, F3 = F2 + L/w, ...).
+  - Meanwhile, an idle or well-behaved flow that suddenly sends a packet will have its finish number
+    computed starting from its current arrival time (max(arrival, 0) + length/weight), resulting in a
+    much smaller finish number. The scheduler immediately serves the conforming flow's packet ahead
+    of the backlog of the aggressive flow.
+  - Thus, WFQ provides strict FLOW ISOLATION: every flow i is mathematically guaranteed a minimum service
+    rate of (W_i / ΣW) * C over any active period, making starvation impossible.
+
+==============================================================================
+ALL TESTS PASSED SUCCESSFULLY AND ALL RESULTS VERIFIED AGAINST SPECIFICATION!
+==============================================================================
