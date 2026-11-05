@@ -1,0 +1,124 @@
+﻿======================================================================
+    LAB 10 / LAB 11: INTER-DOMAIN ROUTING WITH BGP SIMULATOR
+======================================================================
+
+>>> PART A: Topology and Origination
+============================================================
+AS-Level Topology Peerings:
+============================================================
+  AS1 peers with: AS2, AS3
+  AS2 peers with: AS1, AS3, AS4
+  AS3 peers with: AS1, AS2, AS5
+  AS4 peers with: AS2, AS5, AS6
+  AS5 peers with: AS3, AS4, AS6
+  AS6 peers with: AS4, AS5
+============================================================
+Prefix originated by AS1: 203.0.113.0/24 with initial empty AS-path []
+
+>>> PART B: Testing Decision Process at AS6 (Scenario 1 tie-break test)
+Candidates presented to AS6:
+  via AS4 -> Candidate AS-path: [4, 2, 1], Length=3, LocPrf=100
+  via AS5 -> Candidate AS-path: [5, 3, 1], Length=3, LocPrf=100
+Selected Best Route at AS6: AS-path=[4, 2, 1], Next-hop=AS4
+Verification: PASSED (Lowest next-hop tie-break selected AS4).
+
+>>> PART C: Scenario 1 - Synchronous Convergence (No Policy / Default 100)
+
+--- Synchronous Round 1 ---
+  AS2: AS-path: [1], Next-hop: AS1
+  AS3: AS-path: [1], Next-hop: AS1
+  AS4: None
+  AS5: None
+  AS6: None
+
+--- Synchronous Round 2 ---
+  AS2: AS-path: [1], Next-hop: AS1
+  AS3: AS-path: [1], Next-hop: AS1
+  AS4: AS-path: [2, 1], Next-hop: AS2
+  AS5: AS-path: [3, 1], Next-hop: AS3
+  AS6: None
+
+--- Synchronous Round 3 ---
+  AS2: AS-path: [1], Next-hop: AS1
+  AS3: AS-path: [1], Next-hop: AS1
+  AS4: AS-path: [2, 1], Next-hop: AS2
+  AS5: AS-path: [3, 1], Next-hop: AS3
+  AS6: AS-path: [4, 2, 1], Next-hop: AS4
+
+--- Synchronous Round 4 ---
+  AS2: AS-path: [1], Next-hop: AS1
+  AS3: AS-path: [1], Next-hop: AS1
+  AS4: AS-path: [2, 1], Next-hop: AS2
+  AS5: AS-path: [3, 1], Next-hop: AS3
+  AS6: AS-path: [4, 2, 1], Next-hop: AS4
+
+>> Network converged in 4 rounds.
+
+============================================================
+Scenario 1: Converged Routing Table (Default Policy)
+============================================================
+AS     AS-path                Next hop  
+------------------------------------------------------------
+AS2    AS1                    AS1       
+AS3    AS1                    AS1       
+AS4    AS2, AS1               AS2       
+AS5    AS3, AS1               AS3       
+AS6    AS4, AS2, AS1          AS4       
+============================================================
+
+>>> PART D: Scenario 2 - AS6 sets local preference 200 on routes from AS5
+
+============================================================
+Scenario 2: Converged Routing Table (AS6 prefers AS5 with LocPrf=200)
+============================================================
+AS     AS-path                Next hop  
+------------------------------------------------------------
+AS2    AS1                    AS1       
+AS3    AS1                    AS1       
+AS4    AS2, AS1               AS2       
+AS5    AS3, AS1               AS3       
+AS6    AS5, AS3, AS1          AS5       
+============================================================
+
+>>> PART D: Scenario 3 - AS5 sets local preference 50 on routes from AS3
+
+============================================================
+Scenario 3: Converged Routing Table (AS5 de-prefers AS3 with LocPrf=50)
+============================================================
+AS     AS-path                Next hop  
+------------------------------------------------------------
+AS2    AS1                    AS1       
+AS3    AS1                    AS1       
+AS4    AS2, AS1               AS2       
+AS5    AS4, AS2, AS1          AS4       
+AS6    AS4, AS2, AS1          AS4       
+============================================================
+
+============================================================
+PART E: Wireshark Packet Capture Analysis
+File: e:\IIIT G\SEM_5\CS353-LC3C\LAB11\lab11_bgp_session.cap
+============================================================
+PCAP Format Verified: Magic=0xa1b2c3d4, Version=2.4, LinkType=1
+  Frame 4: 198.51.100.4:50000 -> 198.51.100.6:179 | BGP OPEN (Length=29)
+  Frame 5: 198.51.100.6:179 -> 198.51.100.4:50000 | BGP OPEN (Length=29)
+  Frame 6: 198.51.100.4:50000 -> 198.51.100.6:179 | BGP KEEPALIVE (Length=19)
+  Frame 7: 198.51.100.6:179 -> 198.51.100.4:50000 | BGP KEEPALIVE (Length=19)
+  Frame 8: 198.51.100.4:50000 -> 198.51.100.6:179 | BGP UPDATE (Length=49)
+
+    [UPDATE Detailed Dissection]
+      ORIGIN:    IGP
+      AS_PATH:   [4, 2, 1] (Sequence: 4, 2, 1)
+      NEXT_HOP:  198.51.100.4
+      NLRI:      203.0.113.0/24
+
+Identified BGP Message Types present: KEEPALIVE, OPEN, UPDATE
+Transport Protocol: TCP over Port 179
+============================================================
+
+============================================================
+PART E Reconciliation Statement:
+The ordered sequence 4, 2, 1 in the AS_PATH attribute of the real BGP UPDATE
+packet corresponds directly to the list [4, 2, 1] installed by the simulator
+at AS6 in Scenario 1, confirming that the simulated AS-path list accurately
+models the AS_SEQUENCE attribute carried over TCP port 179.
+============================================================
