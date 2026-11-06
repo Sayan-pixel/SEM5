@@ -72,7 +72,7 @@ $$M(n) = \sum_{k=32-n}^{31} 2^k = (2^{32} - 1) - (2^{32-n} - 1)$$
 
 In bitwise programming operations:
 
-$$M(n) = \left( (0\text{xFFFFFFFF} \ll (32 - n)) \ \& \ 0\text{xFFFFFFFF} \right), \quad \text{for } 1 \le n \le 32$$
+$$M(n) = \left( (0\text{xFFFFFFFF} \ll (32 - n))  \land 0\text{xFFFFFFFF} \right), \quad \text{for } 1 \le n \le 32$$
 
 For $n = 0$:
 
@@ -83,9 +83,9 @@ $$M(0) = 0\text{x}00000000 \quad (\text{all 32 bits are zero})$$
 ### 2.4 The Bitwise Matching Rule
 A destination IP address $D$ matches a routing table entry defined by network base address $N$ and prefix length $n$ (mask $M = M(n)$) if and only if:
 
-$$D \ \& \ M = N$$
+$$D  \land M = N$$
 
-Where $\&$ denotes the bitwise AND operation.
+Where $\land$ (bitwise AND, `&`) denotes the bitwise AND operation.
 
 ### 2.5 Address Range, Subnet Size & Host Capacity
 For any entry with network address $N$ and prefix length $n$:
@@ -95,7 +95,7 @@ $$S_{\text{total}} = 2^{32 - n}$$
 
 2. **Network Address (Base Address):**
 
-$$N = D \ \& \ M$$
+$$N = D  \land M$$
 
 3. **Directed Broadcast Address:**
 
@@ -134,7 +134,7 @@ The assignment provides the following routing table (Table 1):
 
 #### Entry E1 (`0.0.0.0/0`) — Default Route:
 - Mask: `0.0.0.0` ($0$ ones, $32$ zeros).
-- For any 32-bit integer $D$: $D \ \& \ 0\text{x}00000000 = 0\text{x}00000000$.
+- For any 32-bit integer $D$: $D  \land 0\text{x}00000000 = 0\text{x}00000000$.
 - Matches every IPv4 address across the entire address space.
 
 #### Entry E2 (`172.20.0.0/16`):
@@ -183,20 +183,20 @@ Subnet Hierarchy for 172.20.x.x:
 ### Destination (a): `172.20.4.200`
 
 1. **Test against E1 (`0.0.0.0/0`):**
-   - $(172.20.4.200) \ \& \ 0.0.0.0 = 0.0.0.0$.
+   - $(172.20.4.200)  \land 0.0.0.0 = 0.0.0.0$.
    - **MATCH** (Prefix length $= 0$).
 2. **Test against E2 (`172.20.0.0/16`):**
-   - $(172.20.4.200) \ \& \ 255.255.0.0 = 172.20.0.0$.
+   - $(172.20.4.200)  \land 255.255.0.0 = 172.20.0.0$.
    - Target is `172.20.0.0`.
    - **MATCH** (Prefix length $= 16$).
 3. **Test against E3 (`172.20.4.0/22`):**
-   - Octet 3: $4 \ \& \ 252 = 00000100_2 \ \& \ 11111100_2 = 00000100_2 = 4$.
-   - $(172.20.4.200) \ \& \ 255.255.252.0 = 172.20.4.0$.
+   - Octet 3: $4  \land 252 = 00000100_2  \land 11111100_2 = 00000100_2 = 4$.
+   - $(172.20.4.200)  \land 255.255.252.0 = 172.20.4.0$.
    - Target is `172.20.4.0`.
    - **MATCH** (Prefix length $= 22$).
 4. **Test against E4 (`172.20.4.128/25`):**
-   - Octet 4: $200 \ \& \ 128 = 11001000_2 \ \& \ 10000000_2 = 10000000_2 = 128$.
-   - $(172.20.4.200) \ \& \ 255.255.255.128 = 172.20.4.128$.
+   - Octet 4: $200  \land 128 = 11001000_2  \land 10000000_2 = 10000000_2 = 128$.
+   - $(172.20.4.200)  \land 255.255.255.128 = 172.20.4.128$.
    - Target is `172.20.4.128`.
    - **MATCH** (Prefix length $= 25$).
 5. **Test against E5 (`192.0.2.0/24`):**
@@ -212,19 +212,19 @@ Subnet Hierarchy for 172.20.x.x:
 ### Destination (b): `172.20.4.5`
 
 1. **Test against E1 (`0.0.0.0/0`):**
-   - $(172.20.4.5) \ \& \ 0.0.0.0 = 0.0.0.0$.
+   - $(172.20.4.5)  \land 0.0.0.0 = 0.0.0.0$.
    - **MATCH** (Prefix length $= 0$).
 2. **Test against E2 (`172.20.0.0/16`):**
-   - $(172.20.4.5) \ \& \ 255.255.0.0 = 172.20.0.0$.
+   - $(172.20.4.5)  \land 255.255.0.0 = 172.20.0.0$.
    - Target is `172.20.0.0`.
    - **MATCH** (Prefix length $= 16$).
 3. **Test against E3 (`172.20.4.0/22`):**
-   - Octet 3: $4 \ \& \ 252 = 4$.
-   - $(172.20.4.5) \ \& \ 255.255.252.0 = 172.20.4.0$.
+   - Octet 3: $4  \land 252 = 4$.
+   - $(172.20.4.5)  \land 255.255.252.0 = 172.20.4.0$.
    - Target is `172.20.4.0`.
    - **MATCH** (Prefix length $= 22$).
 4. **Test against E4 (`172.20.4.128/25`):**
-   - Octet 4: $5 \ \& \ 128 = 00000101_2 \ \& \ 10000000_2 = 0 \ne 128$.
+   - Octet 4: $5  \land 128 = 00000101_2  \land 10000000_2 = 0 \ne 128$.
    - **NO MATCH**.
 5. **Test against E5 (`192.0.2.0/24`):**
    - Octet 1: $172 \ne 192$.
@@ -241,10 +241,10 @@ Subnet Hierarchy for 172.20.x.x:
 1. **Test against E1 (`0.0.0.0/0`):**
    - **MATCH** (Prefix length $= 0$).
 2. **Test against E2 (`172.20.0.0/16`):**
-   - $(172.20.9.9) \ \& \ 255.255.0.0 = 172.20.0.0$.
+   - $(172.20.9.9)  \land 255.255.0.0 = 172.20.0.0$.
    - **MATCH** (Prefix length $= 16$).
 3. **Test against E3 (`172.20.4.0/22`):**
-   - Octet 3: $9 \ \& \ 252 = 00001001_2 \ \& \ 11111100_2 = 00001000_2 = 8 \ne 4$.
+   - Octet 3: $9  \land 252 = 00001001_2  \land 11111100_2 = 00001000_2 = 8 \ne 4$.
    - Note: The valid range for octet 3 in `172.20.4.0/22` is $[4, 7]$. Since $9 \notin [4, 7]$, it fails.
    - **NO MATCH**.
 4. **Test against E4 (`172.20.4.128/25`):**
@@ -272,7 +272,7 @@ Subnet Hierarchy for 172.20.x.x:
 4. **Test against E4 (`172.20.4.128/25`):**
    - **NO MATCH**.
 5. **Test against E5 (`192.0.2.0/24`):**
-   - $(192.0.2.77) \ \& \ 255.255.255.0 = 192.0.2.0$.
+   - $(192.0.2.77)  \land 255.255.255.0 = 192.0.2.0$.
    - Target is `192.0.2.0`.
    - **MATCH** (Prefix length $= 24$).
 
@@ -625,9 +625,9 @@ $$M(0) = 0\text{x}00000000 = 0.0.0.0$$
 
 When evaluating the bitwise match condition for any 32-bit destination IP $D$:
 
-$$D \ \& \ M(0) = D \ \& \ 0\text{x}00000000 = 0\text{x}00000000 = \text{Stored Network } (0.0.0.0)$$
+$$D  \land M(0) = D  \land 0\text{x}00000000 = 0\text{x}00000000 = \text{Stored Network } (0.0.0.0)$$
 
-Because the bitwise AND of any integer with 0 is identically 0, the equation $D \ \& \ M = N$ holds true for all $2^{32}$ possible IPv4 addresses. However, because its prefix length is $0$, any other matching route ($/1$ to $/32$) will have a longer prefix and take precedence under LPM. The default route is only chosen as the fallback when no specific entry matches.
+Because the bitwise AND of any integer with 0 is identically 0, the equation $D  \land M = N$ holds true for all $2^{32}$ possible IPv4 addresses. However, because its prefix length is $0$, any other matching route ($/1$ to $/32$) will have a longer prefix and take precedence under LPM. The default route is only chosen as the fallback when no specific entry matches.
 
 ---
 
@@ -696,7 +696,7 @@ In IPv6 (RFC 8200), addresses are 128 bits wide:
 ## 10. Summary Checklist for Viva & Lab Submissions
 
 When reviewing Lab 10 materials for exams or lab assessments, ensure mastery of:
-- [x] Subnet mask binary calculation: $M(n) = (0\text{xFFFFFFFF} \ll (32-n)) \ \& \ 0\text{xFFFFFFFF}$.
+- [x] Subnet mask binary calculation: $M(n) = (0\text{xFFFFFFFF} \ll (32-n))  \land 0\text{xFFFFFFFF}$.
 - [x] Handling the $n=0$ shift edge case for default routes.
 - [x] Step-by-step bitwise verification: `(dest_ip & mask) == network`.
 - [x] Determining subnet address ranges: Base address $N$ to Broadcast $N + (2^{32-n} - 1)$.

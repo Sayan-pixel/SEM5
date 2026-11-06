@@ -121,11 +121,9 @@ $$\eta = \log_2(1 + 316.2278) = \log_2(317.2278) = \frac{\ln(317.2278)}{\ln(2)} 
 
 Calculating the theoretical capacity ceiling for each cable grade:
 
-$$\begin{aligned}
-C_{\text{Cat5e}} &= 100\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{830.94\text{ Mbps}} \\
-C_{\text{Cat6}} &= 250\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{2077.35\text{ Mbps}} = \mathbf{2.077\text{ Gbps}} \\
-C_{\text{Cat6a}} &= 500\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{4154.70\text{ Mbps}} = \mathbf{4.155\text{ Gbps}}
-\end{aligned}$$
+$$C_{\text{Cat5e}} = 100\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{830.94\text{ Mbps}}$$
+$$C_{\text{Cat6}} = 250\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{2077.35\text{ Mbps}} = \mathbf{2.077\text{ Gbps}}$$
+$$C_{\text{Cat6a}} = 500\text{ MHz} \times 8.3094\text{ bps/Hz} \approx \mathbf{4154.70\text{ Mbps}} = \mathbf{4.155\text{ Gbps}}$$
 
 ---
 
@@ -240,10 +238,8 @@ $$P_{\text{rx}} = P_{\text{tx}} - \text{FSPL} = -\text{FSPL}$$
 ### 5.2 Path Loss Across 900 MHz, 2.4 GHz, and 5 GHz
 Evaluating path loss at a distance of $d = 5\text{ km} = 5000\text{ m}$:
 
-$$\begin{aligned}
-20\log_{10}(5000) &= 20 \times 3.69897 = 73.98\text{ dB} \\
-\text{FSPL}(d, f) &= 73.98 + 20\log_{10}(f) - 147.55 = 20\log_{10}(f) - 73.57\text{ dB}
-\end{aligned}$$
+$$20\log_{10}(5000) = 20 \times 3.69897 = 73.98\text{ dB}$$
+$$\text{FSPL}(d, f) = 73.98 + 20\log_{10}(f) - 147.55 = 20\log_{10}(f) - 73.57\text{ dB}$$
 
 | Frequency Band | Frequency ($f$) | $20\log_{10}(f)$ | FSPL at 5 km | Received Power ($P_{\text{rx}} = 0 - \text{FSPL}$) |
 | :--- | :--- | :--- | :--- | :--- |

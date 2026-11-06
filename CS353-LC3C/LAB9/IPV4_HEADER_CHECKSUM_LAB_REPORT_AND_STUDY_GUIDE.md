@@ -112,9 +112,9 @@ When a router receives a datagram of size $3000\text{ bytes}$ that must exit ove
 In standard two's-complement arithmetic, negative numbers use sign bits and overflow carries are discarded. In **one's-complement arithmetic**:
 1. Numbers are summed.
 2. Any carry bits that overflow past bit 15 (into bit 16 or beyond) are **wrapped around and added back** to the lowest bit:
-   $$\text{folded sum} = (total \& \text{0xFFFF}) + (total \gg 16)$$
+   $$\text{folded sum} = (total \land \text{0xFFFF}) + (total \gg 16)$$
 3. The final 16-bit sum is inverted bitwise (one's complement):
-   $$\text{Checksum} = \sim \text{folded sum} \& \text{0xFFFF}$$
+   $$\text{Checksum} = (\sim \text{folded sum}) \land \text{0xFFFF}$$
 
 ### 3.2 Verification Property: Why a Valid Header Folds to `0xFFFF`
 A sender computes $C = \sim \sum \text{Words}$. When the sender writes $C$ into the header and transmits it:
@@ -174,26 +174,25 @@ Raw Header Hex String:
 ### 5.1 Manual 16-Bit Word Addition of Clean Header
 The nine 16-bit words (skipping checksum field at bytes 10–11) are:
 
-$$\begin{array}{r@{\quad}l}
-\text{Word 1 (Bytes 0-1):} & \text{0x4500} \\
-\text{Word 2 (Bytes 2-3):} & \text{0x0028} \\
-\text{Word 3 (Bytes 4-5):} & \text{0x1C46} \\
-\text{Word 4 (Bytes 6-7):} & \text{0x0000} \\
-\text{Word 5 (Bytes 8-9):} & \text{0x4011} \\
-\text{Word 6 (Bytes 12-13):}& \text{0xC0A8} \\
-\text{Word 7 (Bytes 14-15):}& \text{0x010A} \\
-\text{Word 8 (Bytes 16-17):}& \text{0xC0A8} \\
-\text{Word 9 (Bytes 18-19):}& \text{0x0114} \\
-\hline
-\text{Sum} = & \text{0x224EB}
-\end{array}$$
+| Word Index & Byte Offset | Hex Value |
+|:---|:---:|
+| Word 1 (Bytes 0–1) | `0x4500` |
+| Word 2 (Bytes 2–3) | `0x0028` |
+| Word 3 (Bytes 4–5) | `0x1C46` |
+| Word 4 (Bytes 6–7) | `0x0000` |
+| Word 5 (Bytes 8–9) | `0x4011` |
+| Word 6 (Bytes 12–13) | `0xC0A8` |
+| Word 7 (Bytes 14–15) | `0x010A` |
+| Word 8 (Bytes 16–17) | `0xC0A8` |
+| Word 9 (Bytes 18–19) | `0x0114` |
+| **Sum** | **`0x224EB`** |
 
 #### Folding Carries:
 The sum `0x224EB` exceeds 16 bits (carry $= \text{0x2}$):
 $$\text{folded} = \text{0x24EB} + \text{0x2} = \mathbf{\text{0x24ED}}$$
 
 #### Taking One's Complement:
-$$\text{Computed Checksum} = \sim \text{0x24ED} \& \text{0xFFFF} = \mathbf{\text{0xDB10}}$$
+$$\text{Computed Checksum} = (\sim \text{0x24ED}) \land \text{0xFFFF} = \mathbf{\text{0xDB10}}$$
 
 - Stored Checksum: `0xDB10`
 - Computed Checksum: `0xDB10`
