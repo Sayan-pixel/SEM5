@@ -224,3 +224,4 @@ The figure `plots/Problem2_Clusters.png` illustrates the clusters projected onto
 | `plots/combined_kfold_confusion_matrices.png` | 5-panel comparative confusion matrix plot for all cross-validation folds |
 | `plots/confusion_matrix_fold_1.png` to `_5.png` | Individual confusion matrix heatmaps per fold |
 | `plots/Problem2_Clusters.png` | 4-panel PCA projection of K-Means clusters for $K \in \{3, 5, 10, 15\}$ |
+
