@@ -1,0 +1,6 @@
+Setting,eps,minPts,Clusters,Noise Points,Noise Percentage,Silhouette Score,Silhouette Status
+Setting 1,0.5,3,3,27,13.5,0.7680153133116121,Computed
+Setting 2,1.2,3,2,16,8.0,0.6907018332585823,Computed
+Setting 3,2.1,3,1,3,1.5,,Not computed: cluster condition violated
+Setting 4,0.8,5,3,21,10.5,0.7557672446731972,Computed
+Setting 5,0.8,7,3,21,10.5,0.7557672446731972,Computed
