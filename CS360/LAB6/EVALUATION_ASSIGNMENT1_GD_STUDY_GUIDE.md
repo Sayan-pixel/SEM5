@@ -285,3 +285,4 @@ The multi-panel plot `plots/loss_trajectories_all_splits.png` details the traini
 | `outputs/experiment_results.txt` | Complete numerical logs, optimal hyperparameters, and Mean-RSS metrics |
 | `plots/cost_vs_epochs_for_best_splits.png` | Cost vs Epochs convergence curve comparison |
 | `plots/loss_trajectories_all_splits.png` | Complete grid of loss trajectories across all 3 data splits |
+

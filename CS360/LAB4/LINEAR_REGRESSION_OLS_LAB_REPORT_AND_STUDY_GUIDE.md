@@ -264,3 +264,4 @@ $\hat{\mathbf{y}}$ is the **orthogonal projection** of $\mathbf{y}$ onto $\text{
 - [x] Question 1(h): Analytical proof and justification of $R^2 = r_{xy}^2$ provided.
 - [x] Question 1(i): Output results compiled in `outputs/experiment_results.txt`.
 - [x] Strict KaTeX compliance with zero underscore or ampersand rendering issues.
+

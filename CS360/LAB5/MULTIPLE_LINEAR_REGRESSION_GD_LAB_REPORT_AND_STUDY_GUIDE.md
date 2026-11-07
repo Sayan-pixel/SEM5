@@ -251,3 +251,4 @@ A negative test $R^2$ proves that the model performs **worse than guessing the a
 - [x] Question 1(h): Comprehensive reporting and divergence analysis documented in `outputs/experiment_results.txt`.
 - [x] Question 2: Scikit-Learn `SGDRegressor` implemented and verified against the manual solver.
 - [x] Strict KaTeX compliance with zero underscore or ampersand rendering issues.
+

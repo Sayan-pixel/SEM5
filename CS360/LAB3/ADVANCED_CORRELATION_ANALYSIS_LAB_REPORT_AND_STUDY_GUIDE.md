@@ -233,3 +233,4 @@ Including both variables introduces perfect collinearity ($\text{rank}(\mathbf{X
 - [x] All plots generated and saved in `CS360/LAB3/plots/`.
 - [x] Full numerical log saved in `CS360/LAB3/outputs/experiment_results.txt`.
 - [x] Strict KaTeX compliance with zero underscore or ampersand errors.
+
