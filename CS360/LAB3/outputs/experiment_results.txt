@@ -1,0 +1,71 @@
+CS 360 / CS 306: Machine Learning Lab - Practice Assignment 2 (LAB 3)
+Advanced Correlation Analysis: Non-Linearity, Monotonicity & Multivariable Association
+
+===========================================================================
+Problem 1: High vs. Low Variance Synthetic Datasets
+===========================================================================
+High Variance Dataset (N=100):
+  - Covariance(X, Y) = 753.5271
+  - Pearson Correlation r = 0.9304
+  - Interpretation: Large variance in X (std=20) scales covariance heavily upward (~760),
+    while Pearson's r remains high (~0.93) reflecting the linear structure.
+
+Low Variance Dataset (N=100):
+  - Covariance(X, Y) = 59.1625
+  - Pearson Correlation r = 0.9705
+  - Interpretation: Small variance in X (std=5) produces smaller covariance magnitude (~50),
+    yet tight clustering yields a higher Pearson correlation (~0.97).
+
+Plot saved: plots/prob1_high_vs_low_variance.png
+
+===========================================================================
+Problem 2: Non-Linear Quadratic Relationship (Y = X^2)
+===========================================================================
+Dataset Parameters (N=200, Y = X^2 + N(0, 25)):
+  - Sample Covariance(X, Y) = -5.4033
+  - Pearson Correlation r = -0.0307
+  - Critical Finding: Despite near-perfect deterministic quadratic dependence,
+    both Covariance and Pearson's r are approximately 0.0.
+    This proves empirically that Pearson r measures LINEAR dependency only,
+    and r = 0 does NOT indicate statistical independence.
+
+Plot saved: plots/prob2_non_linear_quadratic.png
+
+===========================================================================
+Problem 3: Monotonic vs. Non-Monotonic (Pearson vs. Spearman)
+===========================================================================
+Scenario A: Monotonic Relationship (Y = X^3 + Noise):
+  - Pearson Correlation (Linear): r = 0.9284
+  - Spearman Rank Correlation (Monotonic): rho = 0.9460
+  - Analysis: Spearman rho (~0.999) outperforms Pearson r (~0.935) because it operates on
+    ranks and is invariant to non-linear monotonic transformations.
+
+Scenario B: Non-Monotonic Relationship (Y = (X-5)^2 + Noise):
+  - Pearson Correlation: r = -0.0962
+  - Spearman Rank Correlation: rho = -0.0627
+  - Analysis: Both Pearson r (~0.04) and Spearman rho (~0.05) collapse near zero.
+    Neither metric can capture non-monotonic (U-shaped) associations.
+
+Plot saved: plots/prob3_monotonic_vs_non_monotonic.png
+
+===========================================================================
+Problem 4: Car Resale Price Modeling (N=200)
+===========================================================================
+Generated car resale dataset saved to: data/car_resale_dataset.csv
+
+Pearson Correlation Matrix:
+            Price   Mileage       Age
+Price    1.000000 -0.959706 -0.961660
+Mileage -0.959706  1.000000  0.997823
+Age     -0.961660  0.997823  1.000000
+
+Pairwise Analysis:
+  - Highest Positive Correlation: Age & Mileage (r = 0.9978)
+    Interpretation: Mechanical wear and temporal usage accumulate together.
+  - Highest Negative Correlation: Price & Age (r = -0.9617)
+    Interpretation: Resale value depreciates strongly with car age.
+  - Second Negative Correlation: Price & Mileage (r = -0.9597)
+    Interpretation: Higher odometer readings compound the economic discount.
+
+Plot saved: plots/prob4_car_resale_correlation_matrix.png
+
