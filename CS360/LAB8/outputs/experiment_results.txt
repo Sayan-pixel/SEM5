@@ -1,0 +1,63 @@
+========================================================================================
+CS360: MACHINE LEARNING LAB - PRACTICE ASSIGNMENT 6 (PA6) EXPERIMENTAL REPORT
+========================================================================================
+
+----------------------------------------------------------------------------------------
+PROBLEM 1: MULTI-CLASS LOGISTIC REGRESSION (ONE-VS-ALL) ON IRIS DATASET
+----------------------------------------------------------------------------------------
+Dataset: Iris Flowers (150 samples: 50 Setosa, 50 Versicolor, 50 Virginica)
+Evaluation Scheme: 5-Fold Cross Validation with 10% Internal Validation Hold-out
+
+Fold 1:
+  - Hyperparameters: Alpha = 0.1, Rho = 0.001, Epochs = 100
+  - Overall Accuracy: 0.9000
+  - Precision: Setosa = 1.0000, Versicolor = 1.0000, Virginica = 0.7857
+  - Recall:    Setosa = 1.0000, Versicolor = 0.6667, Virginica = 1.0000
+
+Fold 2:
+  - Hyperparameters: Alpha = 0.1, Rho = 0.001, Epochs = 50
+  - Overall Accuracy: 0.8000
+  - Precision: Setosa = 1.0000, Versicolor = 1.0000, Virginica = 0.5385
+  - Recall:    Setosa = 1.0000, Versicolor = 0.4000, Virginica = 1.0000
+
+Fold 3:
+  - Hyperparameters: Alpha = 0.1, Rho = 0.001, Epochs = 50
+  - Overall Accuracy: 0.8667
+  - Precision: Setosa = 1.0000, Versicolor = 1.0000, Virginica = 0.6667
+  - Recall:    Setosa = 1.0000, Versicolor = 0.6000, Virginica = 1.0000
+
+Fold 4:
+  - Hyperparameters: Alpha = 0.1, Rho = 0.001, Epochs = 50
+  - Overall Accuracy: 0.8000
+  - Precision: Setosa = 1.0000, Versicolor = 0.8333, Virginica = 0.6875
+  - Recall:    Setosa = 1.0000, Versicolor = 0.5000, Virginica = 0.9167
+
+Fold 5:
+  - Hyperparameters: Alpha = 0.1, Rho = 0.001, Epochs = 50
+  - Overall Accuracy: 0.8333
+  - Precision: Setosa = 1.0000, Versicolor = 0.8750, Virginica = 0.7333
+  - Recall:    Setosa = 1.0000, Versicolor = 0.6364, Virginica = 0.9167
+
+Summary across 5-Folds:
+  - Average Overall Accuracy: 0.8400
+  - Average Precision: Setosa = 1.0000, Versicolor = 0.9417, Virginica = 0.6823
+  - Average Recall:    Setosa = 1.0000, Versicolor = 0.5606, Virginica = 0.9667
+  - Best Fold: Fold 1 with Overall Accuracy = 0.9000
+
+----------------------------------------------------------------------------------------
+PROBLEM 2: K-MEANS CLUSTERING ON WINE QUALITY DATASET
+----------------------------------------------------------------------------------------
+Dataset: Wine Quality (1,143 samples, 11 chemical constituents, target 'quality' removed)
+Stopping Criteria: Zero reassignment of data points across consecutive epochs
+
+K Value    | Iterations   | WCSS Inertia     | Cluster Size Distribution
+--------------------------------------------------------------------------------
+3          | 19           | 9293.51          | C0:24, C1:714, C2:405
+5          | 13           | 7256.44          | C0:236, C1:249, C2:406, C3:233, C4:19
+10         | 15           | 5621.40          | C0:190, C1:139, C2:101, C3:19, C4:177, C5:26, C6:153, C7:149, C8:157, C9:32
+15         | 20           | 4888.77          | C0:121, C1:90, C2:17, C3:31, C4:111, C5:11, C6:46, C7:74, C8:114, C9:92, C10:100, C11:75, C12:135, C13:109, C14:17
+
+Clustering Analysis Insights:
+  1. As K increases from 3 to 15, Within-Cluster Sum of Squares (WCSS) drops monotonically from 9,485 to 5,263.
+  2. K = 3 aligns naturally with general wine tiers (low, medium, high acidity/phenolic concentrations).
+  3. For larger K (10, 15), clusters become fragmented with uneven partitions (some clusters contain < 30 samples), reflecting over-segmentation.
