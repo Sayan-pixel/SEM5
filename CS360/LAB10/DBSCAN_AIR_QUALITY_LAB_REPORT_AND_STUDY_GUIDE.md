@@ -256,3 +256,4 @@ The 5-panel comparative visualization `plots/dbscan_clusters_pm25_pm10.png` illu
 | `outputs/experiment_results.txt` | Complete numerical logs, detailed analysis, and observation writeups |
 | `outputs/setting_1_cluster_pollutant_summary.csv` to `_5.csv` | Pollutant concentration breakdown (mean, min, max, count) per cluster |
 | `plots/dbscan_clusters_pm25_pm10.png` | 5-panel scatter plot of $\text{PM}_{2.5}$ vs $\text{PM}_{10}$ color-coded by cluster |
+

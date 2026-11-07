@@ -188,3 +188,4 @@ The confusion matrix `plots/id3_diabetes_confusion_matrix.png` illustrates the l
 | `outputs/experiment_results.txt` | Complete numerical logs, fold-level metrics, and cumulative confusion matrices |
 | `plots/knn_heart_disease_comparison.png` | 6-panel comparative confusion matrix plot for Standard vs Weighted K-NN ($K \in \{3, 5, 7\}$) |
 | `plots/id3_diabetes_confusion_matrix.png` | Confusion matrix heatmap for the ID3 Decision Tree on diabetes prediction |
+
