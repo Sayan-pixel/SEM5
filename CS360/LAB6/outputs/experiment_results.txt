@@ -1,0 +1,122 @@
+========================================================================================
+CS306 / CS360: MACHINE LEARNING LAB - EVALUATION ASSIGNMENT 1 (EA1) REPORT
+========================================================================================
+
+Dataset Size: 500 samples, 8 predictor features + 1 target.
+Features: daily_screen_time_min, num_app_switches, sleep_hours, notification_count, social_media_time_min, focus_score, mood_score, anxiety_level
+Target: digital_wellbeing_score
+
+----------------------------------------------------------------------------------------
+Optimizer: Batch Gradient Descent (BGD)
+----------------------------------------------------------------------------------------
+Best Overall Split: 80:10:10 | Test Mean-RSS: 1.932804
+
+  Split [60:20:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 1.756633
+    - Val Mean-RSS:   2.491323
+    - Test Mean-RSS:  2.566768
+    - Epochs Converged: 1496
+    - Learned Weights (w0 to wd):
+      [w0: 44.2225, w1: 4.9939, w2: 4.6182, w3: 22.4916, w4: 3.7516, w5: 2.6148, w6: 18.3653, w7: 3.2149, w8: -25.5708]
+
+  Split [70:10:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 1.630453
+    - Val Mean-RSS:   1.862187
+    - Test Mean-RSS:  2.176063
+    - Epochs Converged: 1502
+    - Learned Weights (w0 to wd):
+      [w0: 45.3021, w1: 4.9153, w2: 4.5606, w3: 22.5787, w4: 3.2432, w5: 2.1581, w6: 17.9293, w7: 2.3982, w8: -25.4788]
+
+  Split [80:10:10]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 1.620564
+    - Val Mean-RSS:   2.332476
+    - Test Mean-RSS:  1.932804
+    - Epochs Converged: 1491
+    - Learned Weights (w0 to wd):
+      [w0: 45.4103, w1: 4.6287, w2: 4.4693, w3: 22.5183, w4: 3.6318, w5: 2.2856, w6: 17.8779, w7: 2.5059, w8: -25.6849]
+
+----------------------------------------------------------------------------------------
+Optimizer: Stochastic Gradient Descent (SGD)
+----------------------------------------------------------------------------------------
+Best Overall Split: 80:10:10 | Test Mean-RSS: 0.020749
+
+  Split [60:20:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 0.046771
+    - Val Mean-RSS:   0.053349
+    - Test Mean-RSS:  0.050362
+    - Epochs Converged: 20
+    - Learned Weights (w0 to wd):
+      [w0: 57.0155, w1: 0.6724, w2: 0.3059, w3: 21.0560, w4: 0.3255, w5: 0.0978, w6: 12.9066, w7: 0.2158, w8: -26.9378]
+
+  Split [70:10:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 0.040217
+    - Val Mean-RSS:   0.054363
+    - Test Mean-RSS:  0.037676
+    - Epochs Converged: 16
+    - Learned Weights (w0 to wd):
+      [w0: 57.0565, w1: 0.5338, w2: 0.3057, w3: 21.0631, w4: 0.2815, w5: 0.0845, w6: 12.8056, w7: 0.1478, w8: -26.9641]
+
+  Split [80:10:10]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 0.033633
+    - Val Mean-RSS:   0.041190
+    - Test Mean-RSS:  0.020749
+    - Epochs Converged: 16
+    - Learned Weights (w0 to wd):
+      [w0: 57.5135, w1: 0.3271, w2: 0.1548, w3: 21.0398, w4: 0.1724, w5: 0.0684, w6: 12.6611, w7: 0.1201, w8: -26.9917]
+
+----------------------------------------------------------------------------------------
+Optimizer: Mini-Batch Gradient Descent (MBGD, B=32)
+----------------------------------------------------------------------------------------
+Best Overall Split: 60:20:20 | Test Mean-RSS: 4.123193
+
+  Split [60:20:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.001
+    - Train Mean-RSS: 2.797617
+    - Val Mean-RSS:   4.036467
+    - Test Mean-RSS:  4.123193
+    - Epochs Converged: 112
+    - Learned Weights (w0 to wd):
+      [w0: 40.7021, w1: 5.6918, w2: 5.9463, w3: 22.6748, w4: 3.8875, w5: 3.0719, w6: 19.4756, w7: 4.3321, w8: -24.6184]
+
+  Split [70:10:20]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.01
+    - Train Mean-RSS: 6.125230
+    - Val Mean-RSS:   7.198292
+    - Test Mean-RSS:  9.097628
+    - Epochs Converged: 56
+    - Learned Weights (w0 to wd):
+      [w0: 34.8655, w1: 6.7226, w2: 8.0850, w3: 21.9758, w4: 2.5732, w5: 3.1402, w6: 20.8585, w7: 6.2805, w8: -20.7196]
+
+  Split [80:10:10]:
+    - Optimal Alpha: 0.1
+    - Optimal Rho:   0.01
+    - Train Mean-RSS: 4.077071
+    - Val Mean-RSS:   6.055802
+    - Test Mean-RSS:  5.339418
+    - Epochs Converged: 64
+    - Learned Weights (w0 to wd):
+      [w0: 38.6294, w1: 6.1453, w2: 7.2671, w3: 22.4715, w4: 3.6683, w5: 2.9345, w6: 20.1424, w7: 5.0312, w8: -23.1026]
+
+========================================================================================
+SUMMARY COMPARISON ACROSS OPTIMIZERS (ON BEST RESPECTIVE SPLITS):
+========================================================================================
+Optimizer                      | Best Split | Alpha    | Rho      | Epochs   | Test Mean-RSS 
+----------------------------------------------------------------------------------------
+Batch GD                       | 80:10:10   | 0.1      | 0.001    | 1491     | 1.932804      
+Stochastic GD                  | 80:10:10   | 0.1      | 0.001    | 16       | 0.020749      
+Mini-Batch GD (B=32)           | 60:20:20   | 0.1      | 0.001    | 112      | 4.123193      
+========================================================================================
