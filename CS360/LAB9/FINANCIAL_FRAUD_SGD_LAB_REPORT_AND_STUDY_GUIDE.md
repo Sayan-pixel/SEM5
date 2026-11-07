@@ -220,3 +220,4 @@ The combined figure `plots/combined_ea2_confusion_matrices.png` illustrates the 
 | `plots/CM_1c_With_Scaling.png` | Confusion matrix heatmap for Z-score normalized SGD |
 | `plots/CM_Model_A.png` | Confusion matrix heatmap for reduced Model A |
 | `plots/CM_Model_B.png` | Confusion matrix heatmap for full Model B |
+
