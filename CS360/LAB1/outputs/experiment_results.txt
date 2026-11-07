@@ -1,0 +1,21 @@
+CS 360 / CS 306: Machine Learning Lab - Assignment 1 Results Log
+=================================================================
+
+--- Level 1: Trace Analysis ---
+Initial State n: 50
+Number of Simulations: 10,000
+Empirical Mean Path Length: 4.492900
+Theoretical Harmonic Mean H_50: 4.499205
+Absolute Simulation Error: 0.006305
+
+--- Level 2: Path Parity Determinism ---
+Initial State n: 2000
+Exact Probability of Even Path Length (Fraction): 1/2
+Float Equivalent: 0.500000
+Proof invariant: For all n >= 2, P(even) = 1/2 identically.
+
+--- Level 3: Computational Scalability ---
+Initial State n: 10^500 (501 decimal digits)
+Precision: 50 decimal places
+Expected Path Length: 1151.8697621619243748696022394322645062315929036503
+Analytical Verification: 500 * ln(10) + gamma = 1151.8697621619...
