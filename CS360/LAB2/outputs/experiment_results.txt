@@ -1,0 +1,82 @@
+CS 360 / CS 306: Machine Learning Lab - Practice Assignment 1 (LAB 2)
+Descriptive Statistics, Covariance & Correlation Analysis
+
+======================================================================
+Problem 1: Salary Dataset Analysis
+======================================================================
+(a) Dataset Summary:
+    - Number of features for prediction: 1 (YearsExperience)
+    - Number of patterns (samples): 30
+    - Range of Salaries: Rs. 37,731.00 to Rs. 122,391.00
+
+(b) Scatter plot saved: plots/prob1_salary_vs_experience.png
+
+(c) Dataset Splits (Train:Test = X:Y, random_state=42):
+    Split 10:90 -> Train:  3 rows (10.0%), Test: 27 rows (90.0%)
+    Split 20:80 -> Train:  6 rows (20.0%), Test: 24 rows (80.0%)
+    Split 30:70 -> Train:  9 rows (30.0%), Test: 21 rows (70.0%)
+    Split 40:60 -> Train: 12 rows (40.0%), Test: 18 rows (60.0%)
+    Split 50:50 -> Train: 15 rows (50.0%), Test: 15 rows (50.0%)
+    Split 60:40 -> Train: 18 rows (60.0%), Test: 12 rows (40.0%)
+    Split 70:30 -> Train: 21 rows (70.0%), Test:  9 rows (30.0%)
+    Split 80:20 -> Train: 24 rows (80.0%), Test:  6 rows (20.0%)
+    Split 90:10 -> Train: 27 rows (90.0%), Test:  3 rows (10.0%)
+
+(d) Descriptive Statistics (Sample ddof=1):
+    - Years of Experience: Variance = 8.0536, Std Dev = 2.8379
+    - Salary: Variance = 751,550,960.41, Std Dev = Rs. 27,414.43
+    - Covariance(YearsExperience, Salary) = 76,106.3034
+
+(e) Pearson Correlation Coefficient (Manual): r = 0.978242
+    Interpretation: r = 0.9782 indicates an extremely strong positive linear correlation.
+    As years of experience increase, salary rises monotonically and near-linearly.
+
+======================================================================
+Problem 2: Positive vs. Negative Linear Correlation
+======================================================================
+Positive Correlation Dataset (N=100):
+  - Covariance(X, Y) = 1747.5092
+  - Pearson r = 0.994054
+  - Interpretation: Covariance > 0 and r close to +1 confirm direct linear proportionality.
+
+Negative Correlation Dataset (N=100):
+  - Covariance(X, Y) = -1737.7336
+  - Pearson r = -0.993363
+  - Interpretation: Covariance < 0 and r close to -1 confirm inverse linear proportionality.
+
+Scatter plot saved: plots/prob2_positive_vs_negative_correlation.png
+
+======================================================================
+Problem 3: High vs. Low Variance Synthetic Datasets
+======================================================================
+Low-Variance Dataset (Noise sigma=3):
+  - Variance(Y) = 2272.6553, StdDev(Y) = 47.6724
+  - Covariance(X, Y) = 1255.2643
+  - Pearson r = 0.998369
+  - Interpretation: Tight clustering around the regression line produces r ~ 0.998.
+
+High-Variance Dataset (Noise sigma=35):
+  - Variance(Y) = 3387.4799, StdDev(Y) = 58.2021
+  - Covariance(X, Y) = 1257.5223
+  - Pearson r = 0.819219
+  - Interpretation: Substantial scatter reduces the correlation coefficient to r ~ 0.816.
+
+Scatter plot saved: plots/prob3_high_vs_low_variance.png
+
+======================================================================
+Problem 4: Fertilizer vs. Crop Production (N=20)
+======================================================================
+(b) Whole Dataset (Population N=20) - Crop Production Statistics:
+    - Mean: 53.6005 tons
+    - Median: 52.2905 tons
+    - Variance (Population ddof=0): 589.0830
+    - Std Dev (Population ddof=0): 24.2710 tons
+
+(c) Filtered Sample (Crops > Mean 53.60 tons, N=9):
+    - Sample Mean: 76.7073 tons
+    - Sample Median: 72.9850 tons
+    - Sample Variance (ddof=1): 157.9683
+    - Sample Std Dev (ddof=1): 12.5685 tons
+
+(a) Scatter plot saved: plots/prob4_fertilizer_vs_crop_production.png
+
