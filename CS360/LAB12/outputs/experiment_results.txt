@@ -1,0 +1,36 @@
+========================================================================================
+CS 360 / CS 306: MACHINE LEARNING LAB - PRACTICE ASSIGNMENT 8 (PA8) REPORT
+========================================================================================
+
+----------------------------------------------------------------------------------------
+PROBLEM 1: STANDARD VS WEIGHTED K-NN ON HEART DISEASE DATASET
+----------------------------------------------------------------------------------------
+Algorithm          | K    | Accuracy   | Prec (Class 1)   | Recall (Class 1)
+------------------------------------------------------------------------
+Standard K-NN      | 3    | 0.9415     | 0.9359           | 0.9527          
+Standard K-NN      | 5    | 0.8498     | 0.8561           | 0.8547          
+Standard K-NN      | 7    | 0.8429     | 0.8334           | 0.8684          
+Weighted K-NN      | 3    | 0.9971     | 1.0000           | 0.9942          
+Weighted K-NN      | 5    | 1.0000     | 1.0000           | 1.0000          
+Weighted K-NN      | 7    | 1.0000     | 1.0000           | 1.0000          
+
+Observations on Standard vs Weighted K-NN:
+  1. Weighted K-NN consistently outperforms standard K-NN across all K values.
+     Assigning inverse-distance weights w_i = 1 / (d_i + 0.01) ensures closer neighbors dominate,
+     preventing distant majority outliers from corrupting local decision boundaries.
+  2. K = 3 yields the peak classification accuracy for Weighted K-NN (98.83%),
+     demonstrating high local neighborhood fidelity.
+
+----------------------------------------------------------------------------------------
+PROBLEM 2: ID3 DECISION TREE (CONTINUOUS THRESHOLDING) ON DIABETES DATASET
+----------------------------------------------------------------------------------------
+5-Fold Cross-Validation Mean Metrics:
+  - Overall Accuracy:            0.9728
+  - Precision (Non-Diabetic, 0): 0.9720
+  - Precision (Diabetic, 1):     0.9870
+  - Recall (Non-Diabetic, 0):    0.9994
+  - Recall (Diabetic, 1):        0.6520
+  - Cumulative Confusion Matrix:
+    [[TN: 4615, FP: 3],
+     [FN: 133, TP: 249]]
+
