@@ -14,7 +14,8 @@
 6. [LAB 11 (EA3): DBSCAN with Scikit-Learn, Standardization & Silhouette Score](#lab-11-ea3-dbscan-with-scikit-learn-standardization--silhouette-score)
 7. [LAB 12 (PA8): Standard vs Weighted K-NN & Continuous-Attribute ID3 Decision Tree](#lab-12-pa8-standard-vs-weighted-k-nn--continuous-attribute-id3-decision-tree)
 8. [LAB 13 (PA9): Perceptron (OR/NAND), Categorical Naive Bayes & Gaussian Naive Bayes](#lab-13-pa9-perceptron-ornand-categorical-naive-bayes--gaussian-naive-bayes)
-9. [Final Quick-Revision Formula & Exam Cheat Sheet](#final-quick-revision-formula--exam-cheat-sheet)
+9. [Built-In Library Guide (Scikit-Learn & SciPy) for LAB7 to LAB13](#built-in-library-guide-scikit-learn--scipy-for-lab7-to-lab13)
+10. [Final Quick-Revision Formula & Exam Cheat Sheet](#final-quick-revision-formula--exam-cheat-sheet)
 
 ---
 
@@ -1201,6 +1202,392 @@ class GaussianNaiveBayes:
 * **Comparison (Q2 Categorical NB vs Q3 Gaussian NB):**
   * **Categorical NB** estimates discrete frequency probabilities using counts + Laplace smoothing (best for nominal/categorical features like `Young/Middle/Senior`).
   * **Gaussian NB** assumes continuous features follow a Normal distribution $\mathcal{N}(\mu, \sigma^2)$ per class and computes PDF values (best for continuous features like `Glucose, BMI, Age`), using `log` probabilities to prevent floating-point underflow.
+
+---
+
+## Built-In Library Guide (Scikit-Learn & SciPy) for LAB7 to LAB13
+
+If your exam question allows **built-in ML libraries** (instead of writing algorithms from scratch), you can write much shorter, cleaner code using **`scikit-learn`** and **`scipy`**. Below is the exact list of libraries to import, what each does, and how to write every assignment from **LAB7 to LAB13** using built-in functions.
+
+### 1. Master List of Built-In Imports & Their Purpose
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Data Splitting & Cross-Validation
+from sklearn.model_selection import train_test_split, KFold
+
+# Preprocessing & Encoding
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OrdinalEncoder
+
+# Supervised Models
+from sklearn.linear_model import LogisticRegression, SGDClassifier, Perceptron
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.neighbors import KNeighborsClassifier, NearestNeighbors
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import CategoricalNB, GaussianNB
+
+# Unsupervised Models & Dimensionality Reduction
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.decomposition import PCA
+from scipy.cluster.hierarchy import linkage, dendrogram
+
+# Evaluation Metrics
+from sklearn.metrics import (
+    confusion_matrix, accuracy_score, precision_score,
+    recall_score, f1_score, classification_report, silhouette_score
+)
+```
+
+| Module / Class | Used In | What It Does |
+| :--- | :--- | :--- |
+| `train_test_split` | LAB7, LAB13 | Randomly splits `X, y` into train/test (and train/val) sets (`test_size=0.2, random_state=42`). |
+| `KFold` | LAB7, LAB8, LAB9, LAB12 | Generates $K$ train/test index pairs (`KFold(n_splits=5, shuffle=True, random_state=42)`). |
+| `StandardScaler` | LAB7–LAB12 | Computes Z-score $\frac{x - \mu}{\sigma}$ via `.fit_transform(X_train)` and `.transform(X_test)`. |
+| `LabelEncoder` / `OrdinalEncoder` | LAB8, LAB13 | Converts text labels/categories into integer IDs (`0, 1, 2...`). |
+| `LogisticRegression` | LAB7, LAB8 | Binary or Multi-class Logistic Regression. Supports `.predict_proba(X)` for custom thresholds. |
+| `OneVsRestClassifier` | LAB8 P1 | Explicitly wraps a binary classifier into One-vs-All multi-class strategy. |
+| `SGDClassifier(loss='log_loss')` | LAB9 | Logistic Regression trained using Stochastic Gradient Descent (SGD). |
+| `KMeans` | LAB8 P2 | K-Means clustering (`KMeans(n_clusters=K, random_state=42)`), provides `.labels_` and `.inertia_`. |
+| `PCA` | LAB8 P2 | Reduces high-dimensional features to 2D (`PCA(n_components=2).fit_transform(X)`) for plotting. |
+| `DBSCAN` | LAB10, LAB11 | Density-based clustering (`DBSCAN(eps=..., min_samples=...)`); assigns `-1` to noise. |
+| `NearestNeighbors` | LAB10 | Finds distances to $k$-nearest neighbors (used for K-distance elbow graph). |
+| `linkage`, `dendrogram`, `AgglomerativeClustering` | LAB10 | Hierarchical clustering with `single`, `complete`, or `centroid` linkage + dendrogram plotting. |
+| `KNeighborsClassifier` | LAB12 P1 | Standard K-NN (`weights='uniform'`) and Weighted K-NN (`weights='distance'`). |
+| `DecisionTreeClassifier(criterion='entropy')` | LAB12 P2 | ID3-style Decision Tree using Information Gain (Entropy) and automatic continuous thresholds. |
+| `Perceptron` | LAB13 Q1 | Single-layer Perceptron classifier (`max_iter=2, eta0=0.1`). |
+| `CategoricalNB` | LAB13 Q2 | Naive Bayes for categorical features with Laplace smoothing (`alpha=1.0`). |
+| `GaussianNB` | LAB13 Q3 | Gaussian Naive Bayes for continuous numerical features. |
+| `confusion_matrix`, `accuracy_score`, `precision_score`, `recall_score`, `silhouette_score` | All Labs | Built-in metric functions (note: for class-wise accuracy in multi-class, use `cm = confusion_matrix(y_true, y_pred)`). |
+
+---
+
+### 2. Universal Built-In Template (Splitting, Scaling, Metrics)
+
+```python
+# 1. Train-Test Split + Validation Split
+X_train_full, X_test, y_train_full, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train_full, y_train_full, test_size=0.1, random_state=42
+)
+
+# 2. Standardization (fit ONLY on train, transform val/test)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_val_s   = scaler.transform(X_val)
+X_test_s  = scaler.transform(X_test)
+
+# 3. 5-Fold Cross-Validation Loop
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+for fold, (train_idx, test_idx) in enumerate(kf.split(X), start=1):
+    X_tr, X_te = X[train_idx], X[test_idx]
+    y_tr, y_te = y[train_idx], y[test_idx]
+    scaler = StandardScaler()
+    X_tr = scaler.fit_transform(X_tr)
+    X_te = scaler.transform(X_te)
+    # model.fit(X_tr, y_tr); y_pred = model.predict(X_te)
+
+# 4. Evaluation Metrics
+cm = confusion_matrix(y_test, y_pred)
+acc = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred, average='binary') # use 'macro' or None for multi-class
+rec = recall_score(y_test, y_pred, average='binary')
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+```
+* **Important Rule:** With `sklearn`, you do **NOT** manually add the bias column `x0 = 1`—all linear models (`LogisticRegression`, `SGDClassifier`, `Perceptron`) automatically include an intercept (`fit_intercept=True` by default).
+
+---
+
+### 3. Lab-by-Lab Built-In Implementations
+
+#### LAB 7 (PA5): Binary Logistic Regression + Thresholds (0.3, 0.5, 0.7) + 5-Fold CV
+* **Imports:** `train_test_split`, `KFold`, `StandardScaler`, `LogisticRegression`, `confusion_matrix`, `accuracy_score`, `precision_score`, `recall_score`
+
+```python
+df = pd.read_csv("diabetes_prediction_dataset.csv")
+df = pd.get_dummies(df, columns=['gender', 'smoking_history'], drop_first=True)
+X = df.drop('diabetes', axis=1).values
+y = df['diabetes'].values
+
+X_train_full, X_test, y_train_full, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train_full)
+X_test_s  = scaler.transform(X_test)
+
+# Train built-in Logistic Regression
+model = LogisticRegression(max_iter=100)
+model.fit(X_train_s, y_train_full)
+
+# Predict probabilities for custom thresholds (0.3, 0.5, 0.7)
+probs = model.predict_proba(X_test_s)[:, 1]   # Column 1 = P(y=1 | x)
+for thresh in [0.3, 0.5, 0.7]:
+    y_pred = (probs >= thresh).astype(int)
+    cm = confusion_matrix(y_test, y_pred)
+    print(f"Thresh={thresh} | Acc={accuracy_score(y_test, y_pred):.4f}, "
+          f"Prec={precision_score(y_test, y_pred):.4f}, Rec={recall_score(y_test, y_pred):.4f}")
+```
+* **Key Function:** `model.predict_proba(X)[:, 1]` returns probability of class `1`, letting you apply any threshold (`>= 0.3`, `>= 0.5`, `>= 0.7`) instead of the default `0.5` used by `model.predict(X)`.
+
+---
+
+#### LAB 8 (PA6) Problem 1: Multi-Class Logistic Regression (One-vs-All) on Iris
+* **Imports:** `LabelEncoder`, `KFold`, `StandardScaler`, `OneVsRestClassifier`, `LogisticRegression`, `confusion_matrix`, `classification_report`
+
+```python
+df = pd.read_csv("Iris.csv")
+X = df[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']].values
+y = LabelEncoder().fit_transform(df['Species'])
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+for fold, (train_idx, test_idx) in enumerate(kf.split(X), start=1):
+    scaler = StandardScaler()
+    X_tr = scaler.fit_transform(X[train_idx])
+    X_te = scaler.transform(X[test_idx])
+
+    # Explicit One-vs-All (One-vs-Rest) Logistic Regression
+    ovr_model = OneVsRestClassifier(LogisticRegression(max_iter=100))
+    ovr_model.fit(X_tr, y[train_idx])
+    y_pred = ovr_model.predict(X_te)
+
+    cm = confusion_matrix(y[test_idx], y_pred)
+    acc = accuracy_score(y[test_idx], y_pred)
+    print(f"Fold {fold} Accuracy: {acc:.4f}")
+```
+
+---
+
+#### LAB 8 (PA6) Problem 2: K-Means Clustering + PCA Visualization on WineQT
+* **Imports:** `StandardScaler`, `KMeans` (`sklearn.cluster`), `PCA` (`sklearn.decomposition`)
+
+```python
+df = pd.read_csv("WineQT.csv")
+X = df.drop(columns=[c for c in ['Id', 'quality'] if c in df.columns]).values
+X_scaled = StandardScaler().fit_transform(X)
+
+# Reduce 11D -> 2D using built-in PCA for visualization
+X_pca = PCA(n_components=2).fit_transform(X_scaled)
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+for ax, K in zip(axes.flatten(), [3, 5, 10, 15]):
+    kmeans = KMeans(n_clusters=K, random_state=42, n_init=10)
+    labels = kmeans.fit_predict(X_scaled)
+    ax.scatter(X_pca[:, 0], X_pca[:, 1], c=labels, cmap='tab10', s=20, alpha=0.7)
+    ax.set_title(f"K={K} | Inertia={kmeans.inertia_:.1f}")
+plt.tight_layout()
+plt.show()
+```
+* **Key Attributes:** `kmeans.fit_predict(X)` assigns clusters; `kmeans.inertia_` gives Within-Cluster Sum of Squares (WCSS).
+
+---
+
+#### LAB 9 (EA2): SGD Logistic Regression (Unscaled vs Scaled & Feature Subsets)
+* **Imports:** `KFold`, `StandardScaler`, `SGDClassifier` (`sklearn.linear_model`), `confusion_matrix`, `accuracy_score`, `precision_score`, `recall_score`
+
+```python
+def run_sgd_cv(X, y, normalize=False):
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    accs, precs, recs = [], [], []
+    for train_idx, test_idx in kf.split(X):
+        X_tr, X_te = X[train_idx], X[test_idx]
+        y_tr, y_te = y[train_idx], y[test_idx]
+
+        if normalize:
+            scaler = StandardScaler()
+            X_tr = scaler.fit_transform(X_tr)
+            X_te = scaler.transform(X_te)
+
+        # loss='log_loss' makes SGDClassifier perform SGD Logistic Regression!
+        sgd = SGDClassifier(loss='log_loss', learning_rate='constant',
+                            eta0=0.01, tol=0.001, max_iter=500, random_state=42)
+        sgd.fit(X_tr, y_tr)
+        y_pred = sgd.predict(X_te)
+
+        accs.append(accuracy_score(y_te, y_pred))
+        precs.append(precision_score(y_te, y_pred, zero_division=0))
+        recs.append(recall_score(y_te, y_pred, zero_division=0))
+    return np.mean(accs), np.mean(precs), np.mean(recs)
+
+# Run all 4 experiments:
+# 1(b) Without scaling:    run_sgd_cv(X_all, y, normalize=False)
+# 1(c) With scaling:       run_sgd_cv(X_all, y, normalize=True)
+# 1(e) Model A (2 cols):   run_sgd_cv(X_all[:, [0, 3]], y, normalize=True)
+# 1(e) Model B (all cols): run_sgd_cv(X_all, y, normalize=True)
+```
+* **Important Parameter:** `SGDClassifier(loss='log_loss', learning_rate='constant', eta0=0.01, tol=0.001)` directly implements SGD Logistic Regression with fixed learning rate $\alpha = 0.01$ and stopping tolerance $\rho = 0.001$.
+
+---
+
+#### LAB 10 (PA7): DBSCAN (Grid Search + K-Distance Graph) & Hierarchical Clustering
+* **Imports:** `DBSCAN` (`sklearn.cluster`), `NearestNeighbors` (`sklearn.neighbors`), `silhouette_score` (`sklearn.metrics`), `linkage`, `dendrogram` (`scipy.cluster.hierarchy`)
+
+```python
+df = pd.read_csv("Mall_Customers.csv")
+X = df.iloc[:, [3, 4]].values
+
+# --- Task 1(b): DBSCAN Grid Search ---
+best_score, best_params, best_labels = -1, {}, None
+for eps in [2, 2.5, 3, 3.5, 4]:
+    for minpts in range(4, 11):
+        labels = DBSCAN(eps=eps, min_samples=minpts).fit_predict(X)
+        mask = labels != -1
+        if len(set(labels[mask])) >= 2:
+            score = silhouette_score(X[mask], labels[mask])
+            if score > best_score:
+                best_score, best_params, best_labels = score, {'eps': eps, 'minpts': minpts}, labels
+
+# --- Task 1(c): K-Distance Graph using NearestNeighbors ---
+k = best_params['minpts']
+nbrs = NearestNeighbors(n_neighbors=k + 1).fit(X)
+distances, _ = nbrs.kneighbors(X)
+k_dists = np.sort(distances[:, k])[::-1]     # k-th nearest neighbor sorted descending
+plt.plot(k_dists)
+plt.title(f"K-Distance Graph (k={k})")
+plt.show()
+
+# --- Task 2: Hierarchical Clustering & Dendrogram ---
+fig, axes = plt.subplots(3, 1, figsize=(12, 15))
+for ax, method in zip(axes, ['single', 'complete', 'centroid']):
+    Z = linkage(X, method=method)            # Built-in linkage matrix Z
+    dendrogram(Z, ax=ax, truncate_mode='lastp', p=30)
+    ax.set_title(f"Dendrogram - {method.capitalize()} Linkage")
+plt.tight_layout()
+plt.show()
+```
+* **Note:** You can also obtain flat cluster labels using `AgglomerativeClustering(n_clusters=5, linkage='complete').fit_predict(X)`.
+
+---
+
+#### LAB 11 (EA3): DBSCAN on Urban Air Quality
+* **Note:** LAB11 already uses built-in `sklearn` (`StandardScaler`, `DBSCAN`, `silhouette_score`). The exact code is in Section 6 above:
+  - `StandardScaler().fit_transform(data)`
+  - `DBSCAN(eps=..., min_samples=...).fit_predict(X_scaled)`
+  - `silhouette_score(X_scaled[valid_mask], labels[valid_mask])` (only after removing noise `-1` and verifying $2 \le K \le N_{\text{valid}} - 1$).
+
+---
+
+#### LAB 12 (PA8) Problem 1: Standard K-NN vs Weighted K-NN
+* **Imports:** `KFold`, `StandardScaler`, `KNeighborsClassifier` (`sklearn.neighbors`), `accuracy_score`, `precision_score`, `recall_score`
+
+```python
+df = pd.read_csv("heart.csv")
+X = df.drop("target", axis=1).values
+y = df["target"].values
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+for weight_mode in ['uniform', 'distance']:   # 'uniform' = Standard, 'distance' = Weighted
+    for k in [3, 5, 7]:
+        accs = []
+        for train_idx, test_idx in kf.split(X):
+            scaler = StandardScaler()
+            X_tr = scaler.fit_transform(X[train_idx])
+            X_te = scaler.transform(X[test_idx])
+
+            knn = KNeighborsClassifier(n_neighbors=k, weights=weight_mode)
+            knn.fit(X_tr, y[train_idx])
+            y_pred = knn.predict(X_te)
+            accs.append(accuracy_score(y[test_idx], y_pred))
+        print(f"K-NN (weights={weight_mode}, K={k}) -> Mean Acc: {np.mean(accs):.4f}")
+```
+* **Important Parameter:** `weights='uniform'` gives equal vote to all $K$ neighbors (Standard K-NN); `weights='distance'` weights votes by $1 / d_i$ (Weighted K-NN).
+
+---
+
+#### LAB 12 (PA8) Problem 2: ID3 Decision Tree on Diabetes Dataset
+* **Imports:** `KFold`, `DecisionTreeClassifier` (`sklearn.tree`), `accuracy_score`, `precision_score`, `recall_score`, `confusion_matrix`
+
+```python
+df = pd.read_csv("diabetes_prediction_dataset.csv")
+df = pd.get_dummies(df, columns=["gender", "smoking_history"], drop_first=True)
+X = df.drop("diabetes", axis=1).values
+y = df["diabetes"].values
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+for fold, (train_idx, test_idx) in enumerate(kf.split(X), start=1):
+    # criterion='entropy' uses Information Gain (ID3/C4.5 style)
+    dt = DecisionTreeClassifier(criterion='entropy', max_depth=6,
+                                min_samples_split=15, random_state=42)
+    dt.fit(X[train_idx], y[train_idx])
+    y_pred = dt.predict(X[test_idx])
+    print(f"Fold {fold} Acc: {accuracy_score(y[test_idx], y_pred):.4f}")
+```
+* **Important Parameter:** `criterion='entropy'` selects splits by **Information Gain** (instead of the default `'gini'`).
+
+---
+
+#### LAB 13 (PA9): Perceptron, Categorical Naive Bayes & Gaussian Naive Bayes
+
+##### Q1: Perceptron (`sklearn.linear_model.Perceptron`)
+```python
+from sklearn.linear_model import Perceptron
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+data = [([0, 0], 0), ([0, 1], 1), ([1, 0], 1), ([1, 1], 1)] * 5  # OR gate (20 samples)
+X = np.array([x for x, _ in data])
+y = np.array([lbl for _, lbl in data])
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+clf = Perceptron(max_iter=2, eta0=0.1, tol=None, random_state=42)
+clf.fit(X_train, y_train)
+print("Test Accuracy:", accuracy_score(y_test, clf.predict(X_test)))
+print(classification_report(y_test, clf.predict(X_test), zero_division=0))
+```
+
+##### Q2: Categorical Naive Bayes (`sklearn.naive_bayes.CategoricalNB`)
+```python
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn.naive_bayes import CategoricalNB
+
+# CategoricalNB requires integer-encoded categories (0, 1, 2...)
+encoder = OrdinalEncoder()
+X_enc = encoder.fit_transform(X_q2)        # X_q2 = list of 4 categorical features
+
+cnb = CategoricalNB(alpha=1.0)             # alpha=1.0 applies Laplace smoothing
+cnb.fit(X_enc, y_q2)
+
+test_sample = encoder.transform([["Middle", "High", "long", "Yes"]])
+print("Predicted:", cnb.predict(test_sample))
+print("Probabilities:", cnb.predict_proba(test_sample))
+```
+
+##### Q3: Gaussian Naive Bayes (`sklearn.naive_bayes.GaussianNB`)
+```python
+from sklearn.naive_bayes import GaussianNB
+
+X_q3 = np.array([row[:-1] for row in synthetic_data])
+y_q3 = np.array([row[-1] for row in synthetic_data])
+
+gnb = GaussianNB()
+gnb.fit(X_q3, y_q3)
+
+test_sample = np.array([[142, 29, 42]])
+print("Predicted:", gnb.predict(test_sample))
+print("Probabilities:", gnb.predict_proba(test_sample))
+```
+
+---
+
+### 4. Quick Mapping: From-Scratch vs Built-In Library
+
+| Lab | Task | From-Scratch Approach | Built-In `sklearn` / `scipy` Equivalent |
+| :--- | :--- | :--- | :--- |
+| **LAB7** | Binary Logistic Regression | `CustomLogisticRegression` (Batch GD) | `LogisticRegression(max_iter=100)` + `.predict_proba()` |
+| **LAB8 P1** | Multi-Class Logistic (OvA) | `train_one_vs_all` + `batch_gradient_descent` | `OneVsRestClassifier(LogisticRegression())` |
+| **LAB8 P2** | K-Means + PCA | `k_means()` + `get_first_two_pcs()` | `KMeans(n_clusters=K)` + `PCA(n_components=2)` |
+| **LAB9** | SGD Logistic Regression | `sgd_logistic_regression()` | `SGDClassifier(loss='log_loss', learning_rate='constant', eta0=0.01)` |
+| **LAB10** | DBSCAN + K-Distance + Hierarchical | `dbscan_scratch()`, `k_distance_graph()`, `hierarchical_clustering_scratch()` | `DBSCAN()`, `NearestNeighbors()`, `scipy.cluster.hierarchy.linkage()` |
+| **LAB11** | Urban Air Quality DBSCAN | — (already uses built-in) | `StandardScaler()`, `DBSCAN()`, `silhouette_score()` |
+| **LAB12 P1** | Standard vs Weighted K-NN | `KNNClassifier(weighted=False/True)` | `KNeighborsClassifier(n_neighbors=k, weights='uniform'/'distance')` |
+| **LAB12 P2** | Continuous ID3 Tree | `ID3DecisionTree` (Entropy + Percentiles) | `DecisionTreeClassifier(criterion='entropy', max_depth=6)` |
+| **LAB13 Q1** | Perceptron (OR / NAND) | `step_function` + weight update loop | `Perceptron(max_iter=2, eta0=0.1, tol=None)` |
+| **LAB13 Q2** | Categorical Naive Bayes | `CategoricalNaiveBayes(laplace=1.0)` | `OrdinalEncoder()` + `CategoricalNB(alpha=1.0)` |
+| **LAB13 Q3** | Gaussian Naive Bayes | `GaussianNaiveBayes` (PDF + log-sum-exp) | `GaussianNB()` |
 
 ---
 
